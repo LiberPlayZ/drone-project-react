@@ -1,10 +1,11 @@
 
-const israelPolygon = {
+const israelPolygon =   //israel object that contains cordinates for polygon arround Israel .
+{
     "type": "Feature",
     "properties": {
         "name": "Israel",
         "capital": "Jerusalem",
-        "population":"9.364 million"
+        "population": "9.364 million"
 
     },
     "geometry": {
