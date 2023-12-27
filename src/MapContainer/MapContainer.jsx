@@ -40,7 +40,8 @@ const MapContainer_component = () => { //component for the Israel map with polyg
 
 
 
-    const handUpdatePosition = (data) => {
+    const handUpdatePosition = (data) => //function to handle data get from backend . 
+    {
 
         setDroneData(data);
     }
@@ -72,10 +73,10 @@ const MapContainer_component = () => { //component for the Israel map with polyg
                 url={url}
                 attribution={attribution}
             />
-            
-          <SocketManager ondataUpdate={handUpdatePosition} />
 
-          <DroneComponent droneData={droneData} />
+            <SocketManager ondataUpdate={handUpdatePosition} />
+
+            <DroneComponent droneData={droneData} />
 
 
             <Polygon positions={israelPolygon.geometry.coordinates} pathOptions={{ stroke: true, fill: false }}>
@@ -111,7 +112,7 @@ export default MapContainer_component;
 
 
 
-// { //active the drone animation after short delay. 
+// { //active the drone animation after short delay.
 //     ActiveDrone &&
 //     drones.map((drone) => (
 //         <DroneComponent key={drone.id} drone={drone}></DroneComponent>

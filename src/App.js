@@ -1,13 +1,14 @@
 import React from 'react';
 import './App.css';
-// import enviorment_variables from './enviorment_variables';
-import MapContainer_component from './MapContainer/MapContainer';
+import HistoryComponent from './history_component/HistoryComponent';
+import Play_Flight from './play_Flight/Play_flight_simulation';
+
 
 function App() {
   return (
     <div className="App">
-      <h1>Map of Israel</h1>
-      <MapContainer_component></MapContainer_component>
+    {/* <Play_Flight></Play_Flight> */}
+    <HistoryComponent></HistoryComponent>
       
     </div>
   );

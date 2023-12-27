@@ -1,0 +1,39 @@
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.select {
+    margin-right: 10px;
+
+    /* font-size: 16px; */
+    width: 140px
+}
+
+.tableContainer{
+    text-align: center;
+}
+table {
+    margin: 0 auto;
+    margin-top: 40px;
+    width: 80%;
+    border-collapse: collapse;
+  
+}
+
+table th,
+table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.table tr {
+    background-color: #f2f2f2;
+}

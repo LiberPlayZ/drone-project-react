@@ -4,7 +4,7 @@ import L, { icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import droneiconImage from './drone.png';
 
-
+//create icon for the drone .
 const droneIcon = new L.icon({
     iconUrl: droneiconImage,
     iconSize: [32, 32],
@@ -12,22 +12,22 @@ const droneIcon = new L.icon({
 
 });
 
-const DroneComponent = ({droneData})=>{
-    
-    if(!droneData){
+const DroneComponent = ({ droneData }) => {
+
+    if (!droneData) {
         console.log('nuldassdal');
         return null;
-     
+
     }
     else
-    // console.log(droneData)
+        // console.log(droneData)
 
-    
-    return (
-        <Marker position={[droneData.latitude, droneData.longitude]} icon={droneIcon}>
-            <Popup>{`Drone ${droneData.drone_id} - Lat: ${droneData.latitude}, Long: ${droneData.longitude}`}</Popup>
-        </Marker>
-    );
+        //return new marker with the drone icon and latitude and longitude for the map .
+        return (
+            <Marker position={[droneData.latitude, droneData.longitude]} icon={droneIcon}>
+                <Popup>{`Drone ${droneData.drone_id} - Lat: ${droneData.latitude}, Long: ${droneData.longitude}`}</Popup>
+            </Marker>
+        );
 };
 
 
@@ -54,7 +54,7 @@ export default DroneComponent;
 
 //     const [positionIndex, setPositionIndex] = useState(0);
 
-//     const updatePosition = () => { //  function for update position in route array . 
+//     const updatePosition = () => { //  function for update position in route array .
 //         setPositionIndex((prevIndex) => {
 //             if (prevIndex < drone.route.length - 1) {
 //                 return prevIndex + 1;
