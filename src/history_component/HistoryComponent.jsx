@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from "react";
 import './HistoryComponent.css';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import { handleGetDroneTypes_And_TableData } from './Frontend_handler';
+import Button from '@mui/material/Button';
+import { handleGetDroneTypes_And_TableData } from './IntiailData_SocketHandler';
+import FilterSocket from "./filterSocketHandler";
+
 
 const HistoryComponent = () => {
 
     const [droneTypesData, setDroneTypesData] = useState([]); //variable for select droneType
     const [tableData, setTableData] = useState([]); // variable for table data
-    const [selectedDroneType, setSelectedDroneType] = useState('');
- 
+    const [filterSelect, setFilterSelect] = useState({ // variable for select on change .
+        droneType: '',
+        isDangerous: false,
+    });
+
+    //create the socket for select on change .
+    FilterSocket(filterSelect, setTableData)
+
+
     useEffect(() => {
-        console.log('dada');
         const cleanupSocket = handleGetDroneTypes_And_TableData(setDroneTypesData, setTableData);
+
+
 
         return () => {
             cleanupSocket();
@@ -36,8 +47,8 @@ const HistoryComponent = () => {
                     <InputLabel> Drone Type</InputLabel>
                     <Select
                         label='DroneType'
-                        value={selectedDroneType}
-                        onChange={(e) => setSelectedDroneType(e.target.value)}
+                        value={filterSelect.droneType}
+                        onChange={(e) => setFilterSelect({ ...filterSelect, droneType: e.target.value })}
                     >
                         {droneTypesData.map((droneType) => (
                             <MenuItem key={droneType} value={droneType}>
@@ -48,7 +59,10 @@ const HistoryComponent = () => {
                 </FormControl>
                 <FormControl style={{ marginRight: '10px', width: '140px' }}>
                     <InputLabel>Is Dangerous</InputLabel>
-                    <Select label='Is Dangerous'>
+                    <Select
+                        label='Is Dangerous'
+                        value={filterSelect.isDangerous}
+                        onChange={(e) => setFilterSelect({ ...filterSelect, isDangerous: e.target.value })}>
                         <MenuItem value={true}>True</MenuItem>
                         <MenuItem value={false}>False</MenuItem>
                     </Select>
@@ -61,7 +75,7 @@ const HistoryComponent = () => {
                             <th>Flight ID</th>
                             <th>Drone Type</th>
                             <th>Is Flight Dangerous</th>
-                            <th>show flight</th>
+                            <th>Show flight</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,7 +85,9 @@ const HistoryComponent = () => {
                                 <td>{flight.droneType}</td>
                                 <td>{flight.isDangerous ? 'Yes' : 'No'}</td>
                                 <td>
-                                    <button>show</button>
+                                    <Button variant="contained" color="success">
+                                        Show
+                                    </Button>
                                 </td>
                             </tr>
                         ))}

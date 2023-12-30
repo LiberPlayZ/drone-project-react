@@ -7,7 +7,7 @@ const SERVER_URL = enviorment_variables.Server_URL;
 
 const socket = io.connect(SERVER_URL);
 
-const handleGetDroneTypes_And_TableData = (setDroneTypes,setTableData) => {
+const handleGetDroneTypes_And_TableData = (setDroneTypes, setTableData) => {
 
     //connect to the url from backend to take data .
 
@@ -25,6 +25,7 @@ const handleGetDroneTypes_And_TableData = (setDroneTypes,setTableData) => {
 
     const cleanupSocket = () => {
         socket.off('initial_data_response', handleResponse);
+
     };
     return cleanupSocket;
 };
