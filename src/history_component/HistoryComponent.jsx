@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import './HistoryComponent.css';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import Button from '@mui/material/Button';
+import Table_component from "./Table_component";
 import { handleGetDroneTypes_And_TableData } from './IntiailData_SocketHandler';
 import FilterSocket from "./filterSocketHandler";
 
@@ -13,9 +13,11 @@ const HistoryComponent = () => {
     const [currentPage, setCurrentPage] = useState(1); // variable for current page number
     const rowsPerPage = 5; // limit of rows to page.
     const [filterSelect, setFilterSelect] = useState({ // variable for select on change .
+
         droneType: '',
         isDangerous: false,
     });
+    const tableHeaders = ['Flight ID', 'Drone Type', 'Is Flight Dangerous', 'Show Flight'];
 
     //create the socket for select on change .
     FilterSocket(filterSelect, setTableData)
@@ -36,11 +38,12 @@ const HistoryComponent = () => {
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
-    const indexOfLastFlight = currentPage * rowsPerPage;
-    const indexOfFirstFlight = indexOfLastFlight - rowsPerPage;
-    const currentFlights = tableData.slice(indexOfFirstFlight, indexOfLastFlight);
+
+    const handleButtonClick = (flightId) => { // handle show button event
+        console.log(`Button clicked for Flight ID: ${flightId}`);
 
 
+    };
 
     // Only render the component content when drone types data is available
     if (droneTypesData.length === 0 && tableData.length === 0) {
@@ -82,50 +85,16 @@ const HistoryComponent = () => {
                 </FormControl>
             </div>
             <div className="tableContainer">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Flight ID</th>
-                            <th>Drone Type</th>
-                            <th>Is Flight Dangerous</th>
-                            <th>Show flight</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentFlights.map((flight) => (
-                            <tr key={flight.flightId}>
-                                <td>{flight.flightId}</td>
-                                <td>{flight.droneType}</td>
-                                <td>{flight.isDangerous ? 'Yes' : 'No'}</td>
-                                <td>
-                                    <Button variant="contained" color="success">
-                                        Show
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <div className="pageNavigation">
-                    <Button
-                        variant="contained"
-                        disabled={currentPage === 1}
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        style={{ margin: '0 5px', width: '100px' }}
-                    >
-                        Previous
-                    </Button>
-                    <span>{`Page ${currentPage}`}</span>
-                    <Button
-                        variant="contained"
-                        disabled={currentFlights.length < rowsPerPage}
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        style={{ margin: '0 5px', width: '100px' }}
-                    >
-                        Next
-                    </Button>
-                </div>
+                <Table_component
+                    currentPage={currentPage}
+                    handlePageChange={handlePageChange}
+                    flights={tableData}
+                    rowsPerPage={rowsPerPage}
+                    tableHeaders={tableHeaders}
+                    handleButtonClick={handleButtonClick}
+                />
             </div>
+
         </>
     );
 };

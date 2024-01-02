@@ -35,11 +35,14 @@ table th {
     font-size: 20px;
 }
 
-.table tr {
-    background-color: #f2f2f2;
-}
 
 
 .pageNavigation{
     margin-top: 20px;
 }
+
+.tableContainer table tbody tr:hover {
+    background-color: #f0f0f0; 
+  
+  }
+  
