@@ -10,6 +10,8 @@ const HistoryComponent = () => {
 
     const [droneTypesData, setDroneTypesData] = useState([]); //variable for select droneType
     const [tableData, setTableData] = useState([]); // variable for table data
+    const [currentPage, setCurrentPage] = useState(1); // variable for current page number
+    const rowsPerPage = 5; // limit of rows to page.
     const [filterSelect, setFilterSelect] = useState({ // variable for select on change .
         droneType: '',
         isDangerous: false,
@@ -17,6 +19,8 @@ const HistoryComponent = () => {
 
     //create the socket for select on change .
     FilterSocket(filterSelect, setTableData)
+
+
 
 
     useEffect(() => {
@@ -28,6 +32,15 @@ const HistoryComponent = () => {
             cleanupSocket();
         };
     }, []);
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
+    const indexOfLastFlight = currentPage * rowsPerPage;
+    const indexOfFirstFlight = indexOfLastFlight - rowsPerPage;
+    const currentFlights = tableData.slice(indexOfFirstFlight, indexOfLastFlight);
+
+
 
     // Only render the component content when drone types data is available
     if (droneTypesData.length === 0 && tableData.length === 0) {
@@ -79,7 +92,7 @@ const HistoryComponent = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {tableData.map((flight) => (
+                        {currentFlights.map((flight) => (
                             <tr key={flight.flightId}>
                                 <td>{flight.flightId}</td>
                                 <td>{flight.droneType}</td>
@@ -93,6 +106,25 @@ const HistoryComponent = () => {
                         ))}
                     </tbody>
                 </table>
+                <div className="pageNavigation">
+                    <Button
+                        variant="contained"
+                        disabled={currentPage === 1}
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        style={{ margin: '0 5px', width: '100px' }}
+                    >
+                        Previous
+                    </Button>
+                    <span>{`Page ${currentPage}`}</span>
+                    <Button
+                        variant="contained"
+                        disabled={currentFlights.length < rowsPerPage}
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        style={{ margin: '0 5px', width: '100px' }}
+                    >
+                        Next
+                    </Button>
+                </div>
             </div>
         </>
     );

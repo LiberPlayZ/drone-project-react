@@ -38,3 +38,8 @@ table th {
 .table tr {
     background-color: #f2f2f2;
 }
+
+
+.pageNavigation{
+    margin-top: 20px;
+}
