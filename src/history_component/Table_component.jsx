@@ -2,7 +2,7 @@ import React from "react";
 import './HistoryComponent.css';
 import Button from '@mui/material/Button';
 
-const Table_component = ({
+const Table_Component = ({
     currentPage,
     handlePageChange,
     flights,
@@ -70,9 +70,4 @@ const Table_component = ({
 };
 
 
-export default Table_component;
-
-
-
-
-
+export default Table_Component;

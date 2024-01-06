@@ -7,7 +7,8 @@ const SERVER_URL = enviorment_variables.Server_URL;
 
 const socket = io.connect(SERVER_URL);
 
-const handleGetDroneTypes_And_TableData = (setDroneTypes, setTableData) => {
+const handleGetDroneTypes_And_TableData = (setDroneTypes, setTableData) => {  //function to handle initial data when page load include
+    // (drone type select and defualt table data)
 
     //connect to the url from backend to take data .
 
@@ -19,12 +20,12 @@ const handleGetDroneTypes_And_TableData = (setDroneTypes, setTableData) => {
         // console.log(data.initial_data);
     }
 
-    socket.on('initial_data_response', handleResponse);
+    socket.once('initial_data_response', handleResponse);
 
     //return a cleanup function
 
     const cleanupSocket = () => {
-        socket.off('initial_data_response', handleResponse);
+        socket.disconnect()
 
     };
     return cleanupSocket;

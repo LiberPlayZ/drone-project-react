@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import './HistoryComponent.css';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import Table_component from "./Table_component";
+import Table_Component from './Table_Component';
 import { handleGetDroneTypes_And_TableData } from './IntiailData_SocketHandler';
-import FilterSocket from "./filterSocketHandler";
+import SendAndReceive_Socket from "./SendAndReceive_Socket";
+import enviorment_variables from "../enviorment_variables";
+import { useNavigate } from 'react-router-dom'
+
 
 
 const HistoryComponent = () => {
@@ -11,16 +14,20 @@ const HistoryComponent = () => {
     const [droneTypesData, setDroneTypesData] = useState([]); //variable for select droneType
     const [tableData, setTableData] = useState([]); // variable for table data
     const [currentPage, setCurrentPage] = useState(1); // variable for current page number
-    const rowsPerPage = 5; // limit of rows to page.
     const [filterSelect, setFilterSelect] = useState({ // variable for select on change .
 
         droneType: '',
         isDangerous: false,
     });
-    const tableHeaders = ['Flight ID', 'Drone Type', 'Is Flight Dangerous', 'Show Flight'];
+
+    const tableHeaders = ['Flight ID', 'Drone Type', 'Is Flight Dangerous', 'Show Flight']; //array of table headers to send to table component.
+
+    const rowsPerPage = 5; // limit of rows to page.
+    const nevigate = useNavigate();
 
     //create the socket for select on change .
-    FilterSocket(filterSelect, setTableData)
+    SendAndReceive_Socket(filterSelect, setTableData,
+        enviorment_variables.Send_Filter_Select_Url, enviorment_variables.Recieve_Filter_Select_Url)  //socket for send filter select to backend and recieve the table data . 
 
 
 
@@ -39,13 +46,18 @@ const HistoryComponent = () => {
         setCurrentPage(newPage);
     };
 
-    const handleButtonClick = (flightId) => { // handle show button event
+    const handleButtonClick = (flightId) => { // handle show button event for each line in the table . 
         console.log(`Button clicked for Flight ID: ${flightId}`);
+        nevigate(`/flightSimulation/${flightId}`)
+
+        //create the socket for send data of selected flight
+
+
 
 
     };
 
-    // Only render the component content when drone types data is available
+    // Only render the component content when initial data (drone types and table starting data) is available
     if (droneTypesData.length === 0 && tableData.length === 0) {
         return <p>Loading data...</p>;
     }
@@ -56,7 +68,7 @@ const HistoryComponent = () => {
                 <FormControl style={{ marginRight: '10px', width: '140px' }}>
                     <InputLabel>Select 1</InputLabel>
                     <Select label='Select 1'>
-                        {/* Add options if needed */}
+
                     </Select>
                 </FormControl>
                 <FormControl style={{ marginRight: '10px', width: '140px' }}>
@@ -85,7 +97,7 @@ const HistoryComponent = () => {
                 </FormControl>
             </div>
             <div className="tableContainer">
-                <Table_component
+                <Table_Component
                     currentPage={currentPage}
                     handlePageChange={handlePageChange}
                     flights={tableData}
@@ -101,4 +113,4 @@ const HistoryComponent = () => {
 
 export default HistoryComponent;
 
-//add in the git next commit fix the render of the component . 
+
