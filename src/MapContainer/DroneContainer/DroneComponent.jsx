@@ -15,7 +15,6 @@ const droneIcon = new L.icon({
 const DroneComponent = ({ droneData }) => {
 
     if (!droneData) {
-        console.log('nuldassdal');
         return null;
 
     }

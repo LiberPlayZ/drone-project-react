@@ -6,45 +6,21 @@ import { MapContainer, TileLayer, FeatureGroup, Polygon, Popup } from 'react-lea
 import { EditControl } from 'react-leaflet-draw';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import israelPolygon from './IsraelPolygonFile';
-import drones from './DroneContainer/drones';
 import DroneComponent from './DroneContainer/DroneComponent';
-import SocketManager from '../SocketManager';
-// import L from 'leaflet'
+import L from 'leaflet'
 
-const MapContainer_component = () => { //component for the Israel map with polygon .
+const MapContainer_component = ({ dronesData }) => { //component for the Israel map with polygon .
     const [currentZoom, setCurrentZoom] = useState(enviorment_variables.Map_zoom); // hook for zoom level in the map . 
     // const [ActiveDrone, setActiveDrone] = useState(false); // hook for active the drones component
-    const [droneData, setDroneData] = useState(null);
+    const [map, setMap] = useState(null)
     const center = enviorment_variables.Israel_cordinates;
     const url = enviorment_variables.TitleLayer_url;
     const attribution = enviorment_variables.TitleLayer_atribution;
 
 
-
-    // const updateZoom = (e) => {
-
-    //     const zoomlevel=e.target.getZoom();
-    //     setCurrentZoom(zoomlevel)
-    //     console.log(zoomlevel);
-    //     zoomlevel >=9 ? setActiveDrone(true):setActiveDrone(false);
-
-    // };
-
-    // useEffect(() => {
-    //     const delay = 5000; // 5 seconds delay
-    //     const delayTimer = setTimeout(() => {
-    //         setActiveDrone(true);
-    //     }, delay)
-    //     return () => clearTimeout(delayTimer);
-    // }, []);
-
-
-
-    const handUpdatePosition = (data) => //function to handle data get from backend . 
-    {
-
-        setDroneData(data);
-    }
+    const handleMapReady = (map) => { // handle when map is ready . 
+        setMap(map);
+    };
 
 
     const created = (e) => { // function to  save drawn polygon cordinates.
@@ -53,9 +29,33 @@ const MapContainer_component = () => { //component for the Israel map with polyg
     }
     // console.log(drones);
 
+
+    // useEffect(() => {
+    //     if (map && dronesData.length > 0) {
+    //         // Periodically update drone positions on the map
+    //         const intervalId = setInterval(() => {
+    //             // Clear existing markers
+    //             map.eachLayer((layer) => {
+    //                 if (layer instanceof L.Marker) {
+    //                     map.removeLayer(layer);
+    //                 }
+    //             });
+
+    //             // Add new markers based on dronesData
+    //             dronesData.forEach((droneData) => {
+    //                 map.addLayer(<DroneComponent key={droneData.drone_id} droneData={droneData} />);
+    //             });
+    //         }, 2000);
+
+    //         // Clean up the interval when the component unmounts
+    //         return () => clearInterval(intervalId);
+    //     }
+    // }, [map, dronesData]);
+
+
     return (
 
-        <MapContainer center={center} zoom={currentZoom}>
+        <MapContainer center={center} zoom={currentZoom} whenReady={handleMapReady}>
             <FeatureGroup>
                 <EditControl position='topright' onCreated={created}
                     draw={{
@@ -74,9 +74,6 @@ const MapContainer_component = () => { //component for the Israel map with polyg
                 attribution={attribution}
             />
 
-            <SocketManager ondataUpdate={handUpdatePosition} />
-
-            <DroneComponent droneData={droneData} />
 
 
             <Polygon positions={israelPolygon.geometry.coordinates} pathOptions={{ stroke: true, fill: false }}>

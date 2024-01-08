@@ -25,7 +25,7 @@ const handleGetDroneTypes_And_TableData = (setDroneTypes, setTableData) => {  //
     //return a cleanup function
 
     const cleanupSocket = () => {
-        socket.disconnect()
+        socket.off('initial_data_response');
 
     };
     return cleanupSocket;
