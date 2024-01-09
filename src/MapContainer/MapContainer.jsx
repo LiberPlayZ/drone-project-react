@@ -1,26 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './MapContainer.css';
 import "leaflet/dist/leaflet.css";
 import enviorment_variables from '../enviorment_variables';
-import { MapContainer, TileLayer, FeatureGroup, Polygon, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, FeatureGroup, Polygon, Popup, Marker, Tooltip, useMap } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import israelPolygon from './IsraelPolygonFile';
-import DroneComponent from './DroneContainer/DroneComponent';
-import L from 'leaflet'
+import DroneIcon from './DroneContainer/DroneIcon';
+import L from 'leaflet';
 
-const MapContainer_component = ({ dronesData }) => { //component for the Israel map with polygon .
+const MapContainer_component = ({ dronesData = [] }) => { //component for the Israel map with polygon .
     const [currentZoom, setCurrentZoom] = useState(enviorment_variables.Map_zoom); // hook for zoom level in the map . 
     // const [ActiveDrone, setActiveDrone] = useState(false); // hook for active the drones component
-    const [map, setMap] = useState(null)
+    // const [map, setMap] = useState(null)
+    const [currentDroneIndex, setCurrentDroneIndex] = useState(0);
+    const mapRef = useRef(null);
+    // const map = useMap();
     const center = enviorment_variables.Israel_cordinates;
     const url = enviorment_variables.TitleLayer_url;
     const attribution = enviorment_variables.TitleLayer_atribution;
 
 
-    const handleMapReady = (map) => { // handle when map is ready . 
-        setMap(map);
-    };
+
+    const handleMarkerCLick = (map, lat, long) => {
+        if (map) {
+            map.flyTo([lat, long], 18);
+        }
+    }
 
 
     const created = (e) => { // function to  save drawn polygon cordinates.
@@ -29,33 +35,32 @@ const MapContainer_component = ({ dronesData }) => { //component for the Israel 
     }
     // console.log(drones);
 
+    useEffect(() => {
 
-    // useEffect(() => {
-    //     if (map && dronesData.length > 0) {
-    //         // Periodically update drone positions on the map
-    //         const intervalId = setInterval(() => {
-    //             // Clear existing markers
-    //             map.eachLayer((layer) => {
-    //                 if (layer instanceof L.Marker) {
-    //                     map.removeLayer(layer);
-    //                 }
-    //             });
 
-    //             // Add new markers based on dronesData
-    //             dronesData.forEach((droneData) => {
-    //                 map.addLayer(<DroneComponent key={droneData.drone_id} droneData={droneData} />);
-    //             });
-    //         }, 2000);
+        if (dronesData.length === 0) {
+            return; // No data, nothing to simulate
+        }
 
-    //         // Clean up the interval when the component unmounts
-    //         return () => clearInterval(intervalId);
-    //     }
-    // }, [map, dronesData]);
+
+        const interval = setInterval(() => {
+            setCurrentDroneIndex((prevIndex) => (prevIndex + 1) % dronesData.length);
+        }, 3000);
+
+
+        return () => clearInterval(interval);
+
+
+    }, [dronesData]);
 
 
     return (
 
-        <MapContainer center={center} zoom={currentZoom} whenReady={handleMapReady}>
+        <MapContainer
+            center={center}
+            zoom={currentZoom}
+            doubleClickZoom={true}
+            zoomAnimation={true} >
             <FeatureGroup>
                 <EditControl position='topright' onCreated={created}
                     draw={{
@@ -73,6 +78,34 @@ const MapContainer_component = ({ dronesData }) => { //component for the Israel 
                 url={url}
                 attribution={attribution}
             />
+            {dronesData && dronesData.map((drone, index) => (
+                <Marker key={index} position={[drone.latitude, drone.longitude]} icon={DroneIcon}>
+                    <Tooltip
+                        direction='left'
+                        offset={[-30,0 ]}
+                        permanent
+                    >{`Drone ${index}`}</Tooltip>
+                </Marker>
+            ))}
+            {currentDroneIndex < dronesData.length && (
+                <Marker
+                    key={`current-drone`}
+                    position={[dronesData[currentDroneIndex].latitude, dronesData[currentDroneIndex].longitude]}
+                    icon={DroneIcon}
+                    eventHandlers={{
+                        click: (e) => handleMarkerCLick(e.target._map, dronesData[currentDroneIndex].latitude, dronesData[currentDroneIndex].longitude)
+                    }}
+                >
+                    <Tooltip
+                        direction='right'
+                        offset={[30,0 ]}
+                        permanent
+                    >
+                        <div className='toolTip_current'>
+                        <b>current Drone</b>
+                        </div></Tooltip>
+                </Marker>
+            )}
 
 
 
@@ -86,6 +119,7 @@ const MapContainer_component = ({ dronesData }) => { //component for the Israel 
                     </div>
                 </Popup>
             </Polygon>
+
 
         </MapContainer>
 
@@ -108,10 +142,3 @@ export default MapContainer_component;
 
 
 
-
-// { //active the drone animation after short delay.
-//     ActiveDrone &&
-//     drones.map((drone) => (
-//         <DroneComponent key={drone.id} drone={drone}></DroneComponent>
-
-//     ))}

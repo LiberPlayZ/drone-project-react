@@ -20,8 +20,7 @@ const Play_Flight = () => {
     const navigate = useNavigate();
     const { flightId } = useParams();
     const [flightData, setFlightData] = useState([]); // variable for flightData.
-    const [playPressed, setplayPressed] = useState(false);
-    const [simulationStarted, setsimulationStarted] = useState(false);
+    const [simulationStarted, setsimulationStarted] = useState(true);
 
 
     const handleBackButtonClick = () => {
@@ -30,21 +29,33 @@ const Play_Flight = () => {
 
 
     const play_simulation = () => {
-        console.log(flightData);
+       
     }
 
 
 
-    useEffect(() => {
-        const socket = Flight_Socket(flightId, setFlightData);
+  useEffect(() =>{
+
+        setsimulationStarted(true);
+
+        const socket = Flight_Socket(flightId, (data)=>{
+            setFlightData(data);
+        });
+        // console.log(flightData);
+    
 
 
         return () => {
             socket.disconnect();
-        }
+        };
+    
+},[setFlightData]);
 
 
-    }, []);
+if ( flightData.length === 0) {
+    return <p>Loading data...</p>;
+}
+
 
 
 
@@ -52,15 +63,15 @@ const Play_Flight = () => {
         <div>
             {/* <h1>Map of Israel</h1> */}
             {/* <h1>flightId:{flightId}</h1> */}
-
+          
             <Back_Button_Style>
                 <Button variant="contained" endIcon={<IoReturnUpForward />} onClick={handleBackButtonClick}>
                     Back
                 </Button>
             </Back_Button_Style>
 
-            {}
-            <MapContainer_component DroneData={flightData}></MapContainer_component>
+            <MapContainer_component dronesData={flightData} ></MapContainer_component>
+          
             <Action_Buttons_Hnalder handlePlay_Pause={play_simulation}></Action_Buttons_Hnalder>
 
         </div>
