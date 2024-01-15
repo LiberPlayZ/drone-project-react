@@ -5,15 +5,21 @@ import './Action_Buttons.css';
 
 
 
-const Action_Buttons_Hanlder = ({handlePlay_Pause}) => {
+const ActionButtonsHanlder = ({ handlePlay_Pause, changeIconByPress, handleBackForward, handleForward }) => {
 
 
     return (
         <>
             <div className="buttons_container">
-                <IoPlayBack className="customButton"></IoPlayBack>
-                <FaPlay className="customButton" onClick={handlePlay_Pause}></FaPlay>
-                <IoPlayForward className="customButton"></IoPlayForward>
+                <IoPlayBack className="customButton" onClick={handleBackForward}></IoPlayBack>
+                {changeIconByPress ? ( // check if button pressed , and change icon by it . 
+                    <FaPlay className="customButton" onClick={handlePlay_Pause}></FaPlay>
+                ) : (
+                    <FaPause className="customButton" onClick={handlePlay_Pause}></FaPause>
+                )}
+
+
+                <IoPlayForward className="customButton" onClick={handleForward}></IoPlayForward>
             </div>
         </>
     );
@@ -21,4 +27,4 @@ const Action_Buttons_Hanlder = ({handlePlay_Pause}) => {
 
 
 
-export default Action_Buttons_Hanlder; 
+export default ActionButtonsHanlder; 

@@ -1,10 +1,18 @@
 import L from 'leaflet';
 import droneIconImage from './drone.png'
+import selectedDroneIconImage from './droneSelected.png';
 
 const DroneIcon = L.icon({
-    iconUrl:droneIconImage,
-    iconSize:[32,32],
-    iconAnchor:[16,16],
+    iconUrl: droneIconImage,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
 });
 
-export default DroneIcon;
+
+const SelectedDroneIcon = L.icon({
+    iconUrl: selectedDroneIconImage,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+});
+
+export { DroneIcon, SelectedDroneIcon };

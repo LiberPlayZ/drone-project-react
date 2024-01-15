@@ -3,21 +3,20 @@ import './HistoryComponent.css';
 import Button from '@mui/material/Button';
 
 const Table_Component = ({
-    currentPage,
-    handlePageChange,
-    flights,
-    rowsPerPage,
-    tableHeaders,
-    handleButtonClick
+    currentPage, //prop for cuurent page number . 
+    handlePageChange, // callbacl for handle page change .
+    flights, // the flight data . 
+    rowsPerPage, // variable for number of rows for page .
+    tableHeaders, // array of the headers of the table .
+    handleButtonClick // call back function to handle each table row button . 
 }) => {
+    //variables to handle next / previos page .
     const startIndex = (currentPage - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
     const currentFlights = flights.slice(startIndex, endIndex);
 
     return (
-        <div className="pagination">
-            {/* ... Pagination controls */}
-
+        <div>
             <table>
                 <thead>
                     <tr>
