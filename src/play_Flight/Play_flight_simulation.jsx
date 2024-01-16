@@ -9,26 +9,30 @@ import { styled } from "@mui/system";
 
 
 const BackButtonStyle = styled('div')({
-    display: 'flex',
-    justifyContent: 'flex-end',
+  
     margin: 10,
 });
+
+
 
 
 const Play_Flight = () => {
     const navigate = useNavigate();
     const { flightId } = useParams(); // retrieve the choosen  flightId from history page. 
     const [flightData, setFlightData] = useState([]); // variable for flightData.
-    const [simulationStarted, setsimulationStarted] = useState(true);
+    const [simulationStarted, setsimulationStarted] = useState(false); // variable to see if simulation started .
     const [backward_forward_delta, setbackWard_forward_delta] = useState(0); // variable for controller , -1 - backward , 1 - forward
-    
+    const [currentDroneClick, setcurrentDroneClick] = useState(false);
+    const [buttondisabled, setbuttondisabled] = useState(true);
 
 
     const handleBackButtonClick = () => { // handle back button click to move back to history page . 
         navigate(-1);
     }
 
-
+    const handleCurrentDronenClick = () => { // handle back button click to move back to history page . 
+       setcurrentDroneClick(true);
+    }
 
     const play_simulation = () => { //handle play pause click.
         setsimulationStarted(!simulationStarted);
@@ -45,7 +49,9 @@ const Play_Flight = () => {
     useEffect(() => {
 
 
-      
+      if(currentDroneClick){
+            setbuttondisabled(false);
+      }
         const socket = Flight_Socket(flightId, (data) => {
             setFlightData(data);
         });
@@ -53,12 +59,12 @@ const Play_Flight = () => {
 
         // console.log(backward_forward_delta);
 
-
+        console.log(buttondisabled);
         return () => {
             socket.disconnect();
         };
 
-    }, [flightId, setFlightData]);
+    }, [flightId, setFlightData,currentDroneClick]);
 
 
     if (flightData.length === 0) {
@@ -72,18 +78,29 @@ const Play_Flight = () => {
         <div>
             {/* <h1>Map of Israel</h1> */}
             {/* <h1>flightId:{flightId}</h1> */}
+            <div style={{display:'flex', justifyContent:'space-between',alignItems:'flex-start'}}>
+            <BackButtonStyle>
+                <Button variant="contained" disabled={buttondisabled}   onClick={handleCurrentDronenClick}>
+                    Current Drone
+                </Button>
+                </BackButtonStyle>
+           
 
             <BackButtonStyle>
                 <Button variant="contained" endIcon={<IoReturnUpForward />} onClick={handleBackButtonClick}>
                     Back
                 </Button>
             </BackButtonStyle>
+            </div>
 
             <MapContainerComponent
                 dronesData={flightData}
                 simulationStarted={simulationStarted}
                 backward_forward_delta={backward_forward_delta}
-                setbackward_forward_delta={setbackWard_forward_delta}>
+                setbackward_forward_delta={setbackWard_forward_delta}
+                currentButtonClick={currentDroneClick}
+                setcurrentButtonClick={setcurrentDroneClick}
+                setButtonDisabled = {setbuttondisabled}>
 
             </MapContainerComponent>
 

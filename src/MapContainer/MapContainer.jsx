@@ -9,17 +9,21 @@ import israelPolygon from './IsraelPolygonFile';
 import { DroneIcon, SelectedDroneIcon } from './DroneContainer/DroneIcon';
 
 
-const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_forward_delta, setbackward_forward_delta }) => { //component for the Israel map with polygon .
+const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_forward_delta,currentButtonClick ,setbackward_forward_delta,setcurrentButtonClick ,setButtonDisabled}) => { //component for the Israel map with polygon .
     const [currentZoom, setCurrentZoom] = useState(enviorment_variables.Map_zoom); // hook for zoom level in the map . 
     const [currentDroneIndex, setCurrentDroneIndex] = useState(0);
     const center = enviorment_variables.Israel_cordinates;
     const url = enviorment_variables.TitleLayer_url;
     const attribution = enviorment_variables.TitleLayer_atribution;
+    const [mapObject,setmapObject]= useState(null);
+  
 
 
 
 
     const handleMarkerCLick = (map, lat, long) => { //function to handle current Drone position and zoom on it . 
+        setButtonDisabled(false);
+       setmapObject(map);
         if (map) {
             map.flyTo([lat, long], 18);
         }
@@ -32,9 +36,33 @@ const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_fo
     }
 
 
+
+
+
+    // const handleMapMove = (markerPosition) => {
+    //     const map = mapRef.current?.leafletElement;
+    //     if (!map) return;
+    //     const center = map.getCenter();
+    //     const range = 1000;
+
+    //     // Calculate distance between marker and map center
+    //     const distance = center.distanceTo(markerPosition);
+
+    //     if (distance > range) {
+    //         // Marker is out of range, flyTo the marker
+    //         map.flyTo(markerPosition, map.getZoom());
+    //     }
+
+    // };
+
+
     useEffect(() => {
+        // const map = mapRef.current?.leafletElement;
+        // if (!map) return;
 
-
+        // map.on('move', handleMapMove([dronesData[currentDroneIndex].latitude,
+        // dronesData[currentDroneIndex].longitude]));
+   
         if (dronesData.length === 0) {
             return; // No data, nothing to simulate
         }
@@ -48,6 +76,7 @@ const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_fo
                 setCurrentDroneIndex((prevIndex) => (prevIndex - 1) % dronesData.length);
             else
                 setCurrentDroneIndex(dronesData.length - 1);
+
             setbackward_forward_delta(0);
         }
         else if (backward_forward_delta === 1) {
@@ -55,9 +84,19 @@ const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_fo
             setbackward_forward_delta(0);
 
         }
-        return () => clearInterval(interval);
 
-    }, [dronesData, simulationStarted, backward_forward_delta, setbackward_forward_delta]);
+        if(simulationStarted && currentButtonClick ){
+            handleMarkerCLick(mapObject,dronesData[currentDroneIndex].latitude, dronesData[currentDroneIndex].longitude);
+        
+            
+        }
+        
+        return () => {
+            clearInterval(interval)
+            // map.off('move', handleMapMove);
+        };
+
+    }, [dronesData, simulationStarted, backward_forward_delta, setbackward_forward_delta,currentButtonClick,setcurrentButtonClick]);
 
 
     return (
@@ -94,7 +133,7 @@ const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_fo
                     <Popup>{`Drone ${index}`}</Popup>
                 </Marker>
             ))}
-            {!simulationStarted && currentDroneIndex < dronesData.length && (
+            {simulationStarted && currentDroneIndex < dronesData.length && (
                 <Marker
                     key={`current-drone`}
                     position={[dronesData[currentDroneIndex].latitude, dronesData[currentDroneIndex].longitude]}

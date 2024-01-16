@@ -12,7 +12,7 @@ const ActionButtonsHanlder = ({ handlePlay_Pause, changeIconByPress, handleBackF
         <>
             <div className="buttons_container">
                 <IoPlayBack className="customButton" onClick={handleBackForward}></IoPlayBack>
-                {changeIconByPress ? ( // check if button pressed , and change icon by it . 
+                {!changeIconByPress ? ( // check if button pressed , and change icon by it . 
                     <FaPlay className="customButton" onClick={handlePlay_Pause}></FaPlay>
                 ) : (
                     <FaPause className="customButton" onClick={handlePlay_Pause}></FaPause>
