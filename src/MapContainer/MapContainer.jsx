@@ -9,21 +9,21 @@ import israelPolygon from './IsraelPolygonFile';
 import { DroneIcon, SelectedDroneIcon } from './DroneContainer/DroneIcon';
 
 
-const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_forward_delta,currentButtonClick ,setbackward_forward_delta,setcurrentButtonClick ,setButtonDisabled}) => { //component for the Israel map with polygon .
+const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_forward_delta, currentButtonClick, setbackward_forward_delta, setcurrentButtonClick, setButtonDisabled }) => { //component for the Israel map with polygon .
     const [currentZoom, setCurrentZoom] = useState(enviorment_variables.Map_zoom); // hook for zoom level in the map . 
     const [currentDroneIndex, setCurrentDroneIndex] = useState(0);
     const center = enviorment_variables.Israel_cordinates;
     const url = enviorment_variables.TitleLayer_url;
     const attribution = enviorment_variables.TitleLayer_atribution;
-    const [mapObject,setmapObject]= useState(null);
-  
+    const [mapObject, setmapObject] = useState(null);
+
 
 
 
 
     const handleMarkerCLick = (map, lat, long) => { //function to handle current Drone position and zoom on it . 
         setButtonDisabled(false);
-       setmapObject(map);
+        setmapObject(map);
         if (map) {
             map.flyTo([lat, long], 18);
         }
@@ -62,7 +62,7 @@ const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_fo
 
         // map.on('move', handleMapMove([dronesData[currentDroneIndex].latitude,
         // dronesData[currentDroneIndex].longitude]));
-   
+
         if (dronesData.length === 0) {
             return; // No data, nothing to simulate
         }
@@ -76,27 +76,32 @@ const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_fo
                 setCurrentDroneIndex((prevIndex) => (prevIndex - 1) % dronesData.length);
             else
                 setCurrentDroneIndex(dronesData.length - 1);
-
+            handleMarkerCLick(mapObject, dronesData[currentDroneIndex].latitude, dronesData[currentDroneIndex].longitude);
             setbackward_forward_delta(0);
         }
         else if (backward_forward_delta === 1) {
             setCurrentDroneIndex((prevIndex) => (prevIndex + 1) % dronesData.length);
+            handleMarkerCLick(mapObject, dronesData[currentDroneIndex].latitude, dronesData[currentDroneIndex].longitude);
             setbackward_forward_delta(0);
 
         }
 
-        if(simulationStarted && currentButtonClick ){
-            handleMarkerCLick(mapObject,dronesData[currentDroneIndex].latitude, dronesData[currentDroneIndex].longitude);
-        
-            
+        if (currentButtonClick) {
+            handleMarkerCLick(mapObject, dronesData[currentDroneIndex].latitude, dronesData[currentDroneIndex].longitude);
+            setcurrentButtonClick(false);
+
+
         }
-        
+        if(!simulationStarted){
+            setButtonDisabled(true);
+        }
+
         return () => {
             clearInterval(interval)
             // map.off('move', handleMapMove);
         };
 
-    }, [dronesData, simulationStarted, backward_forward_delta, setbackward_forward_delta,currentButtonClick,setcurrentButtonClick]);
+    }, [dronesData, simulationStarted, backward_forward_delta, setbackward_forward_delta, currentButtonClick, setcurrentButtonClick]);
 
 
     return (

@@ -14,6 +14,7 @@ const HistoryComponent = () => {
     const [droneTypesData, setDroneTypesData] = useState([]); //variable for select droneType
     const [tableData, setTableData] = useState([]); // variable for table data
     const [currentPage, setCurrentPage] = useState(1); // variable for current page number
+    const [loaded,setloaded] = useState(false);
     const [filterSelect, setFilterSelect] = useState({ // variable for select on change .
 
         droneType: '',
@@ -27,18 +28,18 @@ const HistoryComponent = () => {
 
     //create the socket for select on change .
     SendAndReceive_Socket(filterSelect, setTableData,
-        enviorment_variables.Send_Filter_Select_Url, enviorment_variables.Recieve_Filter_Select_Url)  //socket for send filter select to backend and recieve the table data . 
+        enviorment_variables.Send_Filter_Select_Url, enviorment_variables.Recieve_Filter_Select_Url,loaded,setloaded,setDroneTypesData)  //socket for send filter select to backend and recieve the table data . 
 
 
 
 
     useEffect(() => {
-        const cleanupSocket = handleGetDroneTypes_And_TableData(setDroneTypesData, setTableData);
+        setloaded(true);
 
-
+        console.log(tableData);
 
         return () => {
-            cleanupSocket();
+            // cleanupSocket();
         };
     }, []);
 

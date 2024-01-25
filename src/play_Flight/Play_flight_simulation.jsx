@@ -9,7 +9,7 @@ import { styled } from "@mui/system";
 
 
 const BackButtonStyle = styled('div')({
-  
+
     margin: 10,
 });
 
@@ -22,16 +22,16 @@ const Play_Flight = () => {
     const [flightData, setFlightData] = useState([]); // variable for flightData.
     const [simulationStarted, setsimulationStarted] = useState(false); // variable to see if simulation started .
     const [backward_forward_delta, setbackWard_forward_delta] = useState(0); // variable for controller , -1 - backward , 1 - forward
-    const [currentDroneClick, setcurrentDroneClick] = useState(false);
-    const [buttondisabled, setbuttondisabled] = useState(true);
+    const [currentDroneClick, setcurrentDroneClick] = useState(false); // state for current buttton click . 
+    const [buttondisabled, setbuttondisabled] = useState(true); //state for disable the button when simulation didnt start. 
 
 
     const handleBackButtonClick = () => { // handle back button click to move back to history page . 
         navigate(-1);
     }
 
-    const handleCurrentDronenClick = () => { // handle back button click to move back to history page . 
-       setcurrentDroneClick(true);
+    const handleCurrentDronenClick = () => { // handle Current drone click to triger child component .  
+        setcurrentDroneClick(true);
     }
 
     const play_simulation = () => { //handle play pause click.
@@ -41,7 +41,7 @@ const Play_Flight = () => {
         setbackWard_forward_delta(1);
     }
     const back_forward_simulation = () => { //handle back forward click .
-       setbackWard_forward_delta(-1);
+        setbackWard_forward_delta(-1);
     }
 
 
@@ -49,9 +49,9 @@ const Play_Flight = () => {
     useEffect(() => {
 
 
-      if(currentDroneClick){
+        if (currentDroneClick) {
             setbuttondisabled(false);
-      }
+        }
         const socket = Flight_Socket(flightId, (data) => {
             setFlightData(data);
         });
@@ -59,12 +59,11 @@ const Play_Flight = () => {
 
         // console.log(backward_forward_delta);
 
-        console.log(buttondisabled);
         return () => {
             socket.disconnect();
         };
 
-    }, [flightId, setFlightData,currentDroneClick]);
+    }, [flightId, setFlightData, currentDroneClick]);
 
 
     if (flightData.length === 0) {
@@ -78,19 +77,19 @@ const Play_Flight = () => {
         <div>
             {/* <h1>Map of Israel</h1> */}
             {/* <h1>flightId:{flightId}</h1> */}
-            <div style={{display:'flex', justifyContent:'space-between',alignItems:'flex-start'}}>
-            <BackButtonStyle>
-                <Button variant="contained" disabled={buttondisabled}   onClick={handleCurrentDronenClick}>
-                    Current Drone
-                </Button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <BackButtonStyle>
+                    <Button variant="contained" disabled={buttondisabled} onClick={handleCurrentDronenClick}>
+                        Current Drone
+                    </Button>
                 </BackButtonStyle>
-           
 
-            <BackButtonStyle>
-                <Button variant="contained" endIcon={<IoReturnUpForward />} onClick={handleBackButtonClick}>
-                    Back
-                </Button>
-            </BackButtonStyle>
+
+                <BackButtonStyle>
+                    <Button variant="contained" endIcon={<IoReturnUpForward />} onClick={handleBackButtonClick}>
+                        Back
+                    </Button>
+                </BackButtonStyle>
             </div>
 
             <MapContainerComponent
@@ -100,7 +99,7 @@ const Play_Flight = () => {
                 setbackward_forward_delta={setbackWard_forward_delta}
                 currentButtonClick={currentDroneClick}
                 setcurrentButtonClick={setcurrentDroneClick}
-                setButtonDisabled = {setbuttondisabled}>
+                setButtonDisabled={setbuttondisabled}>
 
             </MapContainerComponent>
 
