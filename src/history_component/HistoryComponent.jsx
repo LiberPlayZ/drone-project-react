@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import './HistoryComponent.css';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import Table_Component from './Table_Component';
-import { handleGetDroneTypes_And_TableData } from './IntiailData_SocketHandler';
 import SendAndReceive_Socket from "./SendAndReceive_Socket";
 import enviorment_variables from "../enviorment_variables";
 import { useNavigate } from 'react-router-dom'
