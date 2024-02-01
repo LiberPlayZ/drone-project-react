@@ -24,7 +24,7 @@ const Play_Flight = () => {
     const [backward_forward_delta, setbackWard_forward_delta] = useState(0); // variable for controller , -1 - backward , 1 - forward
     const [currentDroneClick, setcurrentDroneClick] = useState(false); // state for current buttton click . 
     const [buttondisabled, setbuttondisabled] = useState(true); //state for disable the button when simulation didnt start. 
-
+    const [message, setMessage] = useState('loading data ...');
 
     const handleBackButtonClick = () => { // handle back button click to move back to history page . 
         navigate(-1);
@@ -52,7 +52,7 @@ const Play_Flight = () => {
         if (currentDroneClick) {
             setbuttondisabled(false);
         }
-        const socket = Flight_Socket(flightId, (data) => {
+        const socket = Flight_Socket(flightId, setMessage, (data) => {
             setFlightData(data);
         });
         // console.log(flightData);
@@ -67,7 +67,7 @@ const Play_Flight = () => {
 
 
     if (flightData.length === 0) {
-        return <p>Loading data...</p>;
+        return <a href="/LoginPage" style={{ display: 'flex', fontSize: '40px', alignItems: 'center', justifyContent: 'center' }}>{message}</a>;
     }
 
 

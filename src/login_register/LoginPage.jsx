@@ -1,8 +1,10 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import './LoginPage.css';
 import { FaUser, FaLock } from 'react-icons/fa'
 import enviorment_variables from "../enviorment_variables";
 import CryptoJS from 'crypto-js';
+import { useNavigate } from 'react-router-dom'
+import { checkCookieExist } from "./checkCookie";
 
 const LoginPage = () => {
     const Server_url = enviorment_variables.Server_URL + '/login';
@@ -10,6 +12,7 @@ const LoginPage = () => {
     const [Password, setPassword] = useState('');
     const [error, setError] = useState('');
 
+    const navigate = useNavigate();
 
 
 
@@ -68,21 +71,19 @@ const LoginPage = () => {
                     body: JSON.stringify({ IdNumber, password: hashPass }),
                     credentials: 'include'
                 });
-                const data = await response.json();
 
+                const data = await response.json();
                 if (data['error'] === 'Login valid ') {
                     setError('Login valid ');
                 }
-                const cookie = response.headers.get('Set-Cookie');
-                console.log(cookie);
-                if (cookie) {
-                    console.log('dsds');
-                    // localStorage.setItem('user_cookie', cookie);
-                    console.log(cookie);
+                if (response.ok) {
+                    const session_token = checkCookieExist();
+                    // Store session token in local storage or cookie
+                    localStorage.setItem('session_token', session_token);
+
+                    navigate('/flightsHistory');
                 }
 
-                // Handle response data here
-                console.log(data);
             } catch (error) {
 
                 console.error('Error:', error);
@@ -96,37 +97,42 @@ const LoginPage = () => {
 
 
     return (
+        <div>
 
-        <div className="pageContainer">
-            <div className="container">
-                <form action="" onSubmit={handleSubmit}>
-                    <h1>Login</h1>
-                    <div className="input-box">
-                        <input
-                            type="text"
-                            id="IdNumber"
-                            value={IdNumber}
-                            placeholder="ID"
-                            onChange={handleIdNumber}
-                            required />
-                        <FaUser className="icon"></FaUser>
-                        <label className="errorLabel"></label>
-                    </div>
-                    <div className="input-box">
-                        <input
-                            type='password'
-                            id="password"
-                            value={Password}
-                            onChange={handlePassword}
-                            placeholder="Password"
-                            required />
-                        <FaLock className="icon"></FaLock>
-                        <label className="errorLabel"></label>
-                    </div>
-                    {error && <div style={{ color: 'red' }}>{error}</div>}
-                    <button type="submit">Login</button>
-                </form>
+            <div className="pageContainer">
+                <div className="container">
+                    <form action="" onSubmit={handleSubmit}>
+                        <h1>Login</h1>
+                        <div className="input-box">
+                            <input
+                                type="text"
+                                id="IdNumber"
+                                value={IdNumber}
+                                placeholder="ID"
+                                onChange={handleIdNumber}
+                                required />
+                            <FaUser className="icon"></FaUser>
+                            <label className="errorLabel"></label>
+                        </div>
+                        <div className="input-box">
+                            <input
+                                type='password'
+                                id="password"
+                                value={Password}
+                                onChange={handlePassword}
+                                placeholder="Password"
+                                required />
+                            <FaLock className="icon"></FaLock>
+                            <label className="errorLabel"></label>
+                        </div>
+                        {error && <div style={{ color: 'red' }}>{error}</div>}
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
             </div>
+
+         
+
         </div>
 
     );
