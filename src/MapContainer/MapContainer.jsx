@@ -2,27 +2,54 @@ import React, { useState, useEffect } from 'react';
 import './MapContainer.css';
 import "leaflet/dist/leaflet.css";
 import enviorment_variables from '../enviorment_variables';
-import { MapContainer, TileLayer, FeatureGroup, Polygon, Popup, Marker, Tooltip } from 'react-leaflet';
+import { MapContainer, TileLayer, FeatureGroup, Polygon, Popup, Marker, Tooltip, Polyline } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import israelPolygon from './IsraelPolygonFile';
-import { DroneIcon, SelectedDroneIcon } from './DroneContainer/DroneIcon';
+import { DroneIcon, SelectedDroneIcon, EndPoint, StartPoint } from './DroneContainer/DroneIcon';
 
 
-const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_forward_delta, currentButtonClick, setbackward_forward_delta, setcurrentButtonClick, setButtonDisabled }) => { //component for the Israel map with polygon .
+const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward_delta, currentButtonClick, setbackward_forward_delta, setcurrentButtonClick, setButtonDisabled }) => { //component for the Israel map with polygon .
     const [currentZoom, setCurrentZoom] = useState(enviorment_variables.Map_zoom); // hook for zoom level in the map . 
     const [currentDroneIndex, setCurrentDroneIndex] = useState(0);
     const center = enviorment_variables.Israel_cordinates;
     const url = enviorment_variables.TitleLayer_url;
     const attribution = enviorment_variables.TitleLayer_atribution;
     const [mapObject, setmapObject] = useState(null);
+    const dronesDataLength = dronesData.length;
+    const [showEndPoint, setShowEndPoint] = useState(false);
 
 
 
+    const createMapWithPolylines = () => {
+        const polylines = [];
 
+        // Iterate through the array of markers to create polylines
+        for (let i = 0; i < dronesDataLength - 1; i++) {
+            const startPoint = dronesData[i];
+            const endPoint = dronesData[i + 1];
+
+            // Create positions for the Polyline using lat and lng properties of startPoint and endPoint
+            const positions = [[startPoint.latitude, startPoint.longitude], [endPoint.latitude, endPoint.longitude]];
+
+            // Create a Polyline between current marker and the next one
+            const polyline = (
+                <Polyline
+                    key={`polyline-${i}`}
+                    positions={positions}
+                    color="black"
+                />
+            );
+
+            // Add the Polyline to the array
+            polylines.push(polyline);
+        }
+        return polylines;
+    }
 
     const handleMarkerCLick = (map, lat, long) => { //function to handle current Drone position and zoom on it . 
         setButtonDisabled(false);
+        setShowEndPoint(true);
         setmapObject(map);
         if (map) {
             map.flyTo([lat, long], 18);
@@ -39,29 +66,9 @@ const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_fo
 
 
 
-    // const handleMapMove = (markerPosition) => {
-    //     const map = mapRef.current?.leafletElement;
-    //     if (!map) return;
-    //     const center = map.getCenter();
-    //     const range = 1000;
-
-    //     // Calculate distance between marker and map center
-    //     const distance = center.distanceTo(markerPosition);
-
-    //     if (distance > range) {
-    //         // Marker is out of range, flyTo the marker
-    //         map.flyTo(markerPosition, map.getZoom());
-    //     }
-
-    // };
-
 
     useEffect(() => {
-        // const map = mapRef.current?.leafletElement;
-        // if (!map) return;
 
-        // map.on('move', handleMapMove([dronesData[currentDroneIndex].latitude,
-        // dronesData[currentDroneIndex].longitude]));
 
         if (dronesData.length === 0) {
             return; // No data, nothing to simulate
@@ -92,7 +99,7 @@ const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_fo
 
 
         }
-        if(!simulationStarted){
+        if (!simulationStarted) {
             setButtonDisabled(true);
         }
 
@@ -128,16 +135,21 @@ const MapContainerComponent = ({ dronesData = [], simulationStarted, backward_fo
                 url={url}
                 attribution={attribution}
             />
-            {dronesData && dronesData.map((drone, index) => (
-                <Marker key={index} position={[drone.latitude, drone.longitude]} icon={DroneIcon}>
-                    {/* <Tooltip
-                        direction='left'
-                        offset={[-45, 0]}
-                        permanent
-                    >{`Drone ${index}`}</Tooltip> */}
-                    <Popup>{`Drone ${index}`}</Popup>
-                </Marker>
-            ))}
+            <Marker
+                key={'starting point'}
+                position={[dronesData[0].latitude, dronesData[0].longitude]}
+                icon={StartPoint}
+            ></Marker>
+            {showEndPoint &&(
+                <Marker
+                    key={'ending point'}
+                    position={[dronesData[dronesDataLength - 1].latitude, dronesData[dronesDataLength - 1].longitude]}
+                    icon={EndPoint}
+                ></Marker>)}
+
+            {
+                createMapWithPolylines()
+            }
             {simulationStarted && currentDroneIndex < dronesData.length && (
                 <Marker
                     key={`current-drone`}

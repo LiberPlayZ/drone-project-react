@@ -5,6 +5,7 @@ import enviorment_variables from "../enviorment_variables";
 import CryptoJS from 'crypto-js';
 import { useNavigate } from 'react-router-dom'
 import { checkCookieExist } from "./checkCookie";
+import { checkIdNumber, checkPassword, handleIdNumber, handlePassword } from "./Logic";
 
 const LoginPage = () => {
     const Server_url = enviorment_variables.Server_URL + '/login';
@@ -13,43 +14,6 @@ const LoginPage = () => {
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
-
-
-
-
-    function checkIdNumber(id) { // regex for checking idNumber
-        return /^\d{9}$/.test(id);
-    }
-    function checkPassword(password) { // regex for checking password .
-        return /(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}/.test(password);
-    }
-
-
-    const handleIdNumber = (e) => { // function to handle on change id Number for showing error if neccesary.
-        const value = e.target.value;
-
-        // Validate if the Id contains only numbers and has a  length of 9
-        if (!checkIdNumber(value)) {
-            setError('Id must be exactly 9 digits long and contain only numbers.');
-        } else {
-            setError('');
-        }
-        setIdNumber(value);
-
-    }
-
-    const handlePassword = (e) => { // function to handle on change password for showing error if neccesary.
-        const value = e.target.value;
-
-        // Validate if the password meets the criteria using a single regex pattern
-        if (!checkPassword(value)) {
-            setError('Password must be at least 6 characters long and contain at least one uppercase letter, one number, and one letter.');
-        } else {
-            setError('');
-        }
-
-        setPassword(value);
-    }
 
 
 
@@ -109,7 +73,7 @@ const LoginPage = () => {
                                 id="IdNumber"
                                 value={IdNumber}
                                 placeholder="ID"
-                                onChange={handleIdNumber}
+                                onChange={(event) => handleIdNumber(event, setIdNumber, setError)}
                                 required />
                             <FaUser className="icon"></FaUser>
                             <label className="errorLabel"></label>
@@ -119,7 +83,7 @@ const LoginPage = () => {
                                 type='password'
                                 id="password"
                                 value={Password}
-                                onChange={handlePassword}
+                                onChange={(event) => handlePassword(event, setPassword, setError)}
                                 placeholder="Password"
                                 required />
                             <FaLock className="icon"></FaLock>
@@ -131,7 +95,7 @@ const LoginPage = () => {
                 </div>
             </div>
 
-         
+
 
         </div>
 
