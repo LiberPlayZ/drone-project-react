@@ -6,7 +6,7 @@ import { checkCookieExist } from '../login_register/checkCookie';
 
 const SOCKET_URL = enviorment_variables.Server_URL;
 
-const SendAndReceive_Socket = (sendData, setReceiveData, sendUrlOnChange, receiveUrlOnChange,loaded,setloaded,setDroneTypes,setMessage) => {
+const SendAndReceive_Socket = (sendData, setReceiveData,setIsAdmin,sendUrlOnChange, receiveUrlOnChange,loaded,setloaded,setDroneTypes,setMessage) => {
   const socket = io.connect(SOCKET_URL);
   const existCookie = checkCookieExist();
   useEffect(() => {
@@ -23,7 +23,7 @@ const SendAndReceive_Socket = (sendData, setReceiveData, sendUrlOnChange, receiv
           localStorage.removeItem('session_token');
         }
         else
-          handleResponse(data, setDroneTypes, setReceiveData)
+          handleResponse(data, setDroneTypes, setReceiveData,setIsAdmin)
       });
       
       return () => {
@@ -51,10 +51,11 @@ const SendAndReceive_Socket = (sendData, setReceiveData, sendUrlOnChange, receiv
   }, [sendData,loaded]);
 };
 
-const handleResponse = (data, setDroneTypes, setTableData) => {
+const handleResponse = (data, setDroneTypes, setTableData,setIsAdmin) => {
   console.log(data);
   setDroneTypes(data.droneTypes);
-  setTableData(data.initial_data)
+  setTableData(data.initial_data);
+  setIsAdmin(data.Role)
   // console.log(data.initial_data);
 }
 

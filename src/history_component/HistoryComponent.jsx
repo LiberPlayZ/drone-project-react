@@ -6,6 +6,8 @@ import SendAndReceive_Socket from "./SendAndReceive_Socket";
 import enviorment_variables from "../enviorment_variables";
 import { useNavigate } from 'react-router-dom'
 
+import Navbar from "../navbar/Navbar";
+
 
 
 const HistoryComponent = () => {
@@ -13,7 +15,8 @@ const HistoryComponent = () => {
     const [droneTypesData, setDroneTypesData] = useState([]); //variable for select droneType
     const [tableData, setTableData] = useState([]); // variable for table data
     const [currentPage, setCurrentPage] = useState(1); // variable for current page number
-    const [loaded, setloaded] = useState(false);
+    const [loaded, setloaded] = useState(false); // variable for load page to check if user is logged in.
+    const [isAdmin, setIsAdmin] = useState(false);
     const [message, setMessage] = useState('loading data...');
     const [filterSelect, setFilterSelect] = useState({ // variable for select on change .
 
@@ -27,7 +30,7 @@ const HistoryComponent = () => {
     const nevigate = useNavigate();
 
     //create the socket for select on change .
-    SendAndReceive_Socket(filterSelect, setTableData,
+    SendAndReceive_Socket(filterSelect, setTableData, setIsAdmin,
         enviorment_variables.Send_Filter_Select_Url, enviorment_variables.Recieve_Filter_Select_Url, loaded, setloaded, setDroneTypesData, setMessage)  //socket for send filter select to backend and recieve the table data . 
 
 
@@ -63,7 +66,9 @@ const HistoryComponent = () => {
 
     return (
         <>
+            <Navbar isAdmin={isAdmin}></Navbar>
             <div className="filter-buttons">
+
                 <FormControl style={{ marginRight: '10px', width: '140px' }}>
                     <InputLabel>Select 1</InputLabel>
                     <Select label='Select 1'>
@@ -94,6 +99,7 @@ const HistoryComponent = () => {
                         <MenuItem value={false}>False</MenuItem>
                     </Select>
                 </FormControl>
+
             </div>
             <div className="tableContainer">
                 <Table_Component

@@ -1,7 +1,8 @@
 .filter-buttons {
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 10px;
+    background-color: blanchedalmond;
 }
 
 .select {
@@ -11,15 +12,16 @@
     width: 140px
 }
 
-.tableContainer{
+.tableContainer {
     text-align: center;
 }
+
 table {
     margin: 0 auto;
     margin-top: 40px;
     width: 80%;
     border-collapse: collapse;
-  
+
 }
 
 table th,
@@ -37,12 +39,11 @@ table th {
 
 
 
-.pageNavigation{
+.pageNavigation {
     margin-top: 20px;
 }
 
 .tableContainer table tbody tr:hover {
-    background-color: #f0f0f0; 
-  
-  }
-  
+    background-color: #f0f0f0;
+
+}

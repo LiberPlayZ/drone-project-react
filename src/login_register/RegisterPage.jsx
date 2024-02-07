@@ -1,24 +1,49 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import './LoginPage.css';
-import {  FaLock } from 'react-icons/fa'
+import { FaLock } from 'react-icons/fa'
 import enviorment_variables from "../enviorment_variables";
 import CryptoJS from 'crypto-js';
 import { useNavigate } from 'react-router-dom'
 import { checkIdNumber, checkPassword, handleIdNumber, handlePassword, handleName, handleAge, checkAge, handleRole, checkRole } from "./Logic";
 
 const RegisterPage = () => {
-    const Server_url = enviorment_variables.Server_URL + '/addUser';
+    const Server_url = enviorment_variables.Server_URL;
     const [IdNumber, setIdNumber] = useState('');
     const [IdfNumber, setIdfNumber] = useState('');
     const [Role, setRole] = useState('');
     const [Password, setPassword] = useState('');
     const [Name, setName] = useState('');
     const [age, setAge] = useState('');
+    const [checkConnectedRole, setCheckConnectedRole] = useState('')
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
 
-
+    useEffect(() => {
+        // Make a POST request to your backend to fetch the user's role
+        fetch(Server_url + '/currentRole', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({})
+        })
+            .then(response => {
+                if (!response.ok) {
+                    setCheckConnectedRole('user')
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data)
+                setCheckConnectedRole(data.Role)
+            })
+            .catch(error => {
+                console.error('Error fetching user role:', error);
+            });
+    }, []);
 
 
 
@@ -33,27 +58,18 @@ const RegisterPage = () => {
         if (checkIdNumber(IdNumber) && checkPassword(Password) && checkAge(age) && checkRole(Role)) {
             try {
                 const hashPass = CryptoJS.SHA256(Password).toString();
-                const response = await fetch(Server_url, {
+                const response = await fetch(Server_url + '/addUser', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ Name, age, IdNumber, IdfNumber, Role, password: hashPass }),
-                    credentials:'include'    
+                    credentials: 'include'
                 });
-    
+
                 const data = await response.json();
                 console.log(data);
-                // if (data['error'] === 'Login valid ') {
-                //     setError('Login valid ');
-                // }
-                // if (response.ok) {
-                //     const session_token = checkCookieExist();
-                //     // Store session token in local storage or cookie
-                //     localStorage.setItem('session_token', session_token);
-
-                //     navigate('/flightsHistory');
-                // }
+              
 
             } catch (error) {
 
@@ -65,7 +81,10 @@ const RegisterPage = () => {
         }
     }
 
-
+    if (checkConnectedRole!=='admin') {
+        return <a href="/LoginPage" style={{ display: 'flex', fontSize: '40px', alignItems: 'center', justifyContent: 'center' }}
+        >Your role can not add user ,pls log in</a>;
+    }
 
     return (
         <div>

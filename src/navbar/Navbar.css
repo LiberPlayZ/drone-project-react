@@ -1,0 +1,26 @@
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+.topnav div {
+    cursor: pointer;
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.topnav div:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Create a right-aligned (split) link inside the navigation bar */
+.topnav div.split {
+    float: right;
+    background-color: #04AA6D;
+    color: white;
+}
