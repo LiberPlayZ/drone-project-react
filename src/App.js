@@ -1,7 +1,7 @@
 import { React, useEffect } from 'react';
 import './App.css';
 import HistoryComponent from './history_component/HistoryComponent';
-import Play_Flight from './play_Flight/Play_flight_simulation';
+import PlayFlight from './play_Flight/PlayFlight';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import LoginPage from'./login_register/LoginPage';
 
@@ -25,7 +25,7 @@ const NavigateToLogin = ({ routeName }) => { // component to render login at fir
       localStorage.removeItem('session_token');
       navigate('/LoginPage');
     }
-  }, [navigate]);
+  }, [navigate,routeName]);
 
   return null; // This component doesn't render anything, it just performs the navigation
 }
@@ -39,9 +39,9 @@ function App() {
       <Routes>
         <Route path='/' element={<NavigateToLogin routeName={'/flightsHistory'} />} />
         <Route path='/LoginPage' element={<LoginPage />} />
-        <Route path='/Register' element={<RegisterPage/>}/>
+        <Route path='/addUser' element={<RegisterPage/>}/>
         <Route path='/flightsHistory' element={<HistoryComponent />} />
-        <Route path='/flightSimulation/:flightId' element={<Play_Flight />} />
+        <Route path='/flightSimulation/:flightId' element={<PlayFlight />} />
 
       </Routes>
     </Router>

@@ -7,7 +7,7 @@ const Server_URL = enviorment_variables.Server_URL;
 
 
 
-const Flight_Socket = (flightId,setMessage, setReceiveData) => {
+const Flight_Socket = (flightId, setMessage, setReceiveData) => {
     const socket = io.connect(Server_URL);
     const existCookie = checkCookieExist();
     socket.emit(enviorment_variables.Send_Filght_Url, flightId, existCookie);

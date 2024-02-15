@@ -24,7 +24,8 @@ const HistoryComponent = () => {
         isDangerous: false,
     });
 
-    const tableHeaders = ['Flight ID', 'Drone Type', 'Is Flight Dangerous', 'Show Flight']; //array of table headers to send to table component.
+    const tableHeaders = ['Number', 'Flight ID', 'Drone Type', 'Is Flight Dangerous', 'Show Flight']; //array of table headers to send to table component.
+    const tableDataHeaders = ['flightId', 'droneType', 'isDangerous']; //array of table data headers to send to table component.
 
     const rowsPerPage = 5; // limit of rows to page.
     const nevigate = useNavigate();
@@ -44,19 +45,16 @@ const HistoryComponent = () => {
         };
     }, []);
 
-    const handlePageChange = (newPage) => {
+    const handlePageChange = (newPage) => { // function to handle page number change .
         setCurrentPage(newPage);
     };
+
 
     const handleButtonClick = (flightId) => { // handle show button event for each line in the table . 
         console.log(`Button clicked for Flight ID: ${flightId}`);
         nevigate(`/flightSimulation/${flightId}`)
 
         //create the socket for send data of selected flight
-
-
-
-
     };
 
     // Only render the component content when initial data (drone types and table starting data) is available
@@ -69,13 +67,13 @@ const HistoryComponent = () => {
             <Navbar isAdmin={isAdmin}></Navbar>
             <div className="filter-buttons">
 
-                <FormControl style={{ marginRight: '10px', width: '140px' }}>
+                <FormControl style={{ margin: '10px', width: '140px' }}>
                     <InputLabel>Select 1</InputLabel>
                     <Select label='Select 1'>
 
                     </Select>
                 </FormControl>
-                <FormControl style={{ marginRight: '10px', width: '140px' }}>
+                <FormControl style={{ margin: '10px', width: '140px' }}>
                     <InputLabel> Drone Type</InputLabel>
                     <Select
                         label='DroneType'
@@ -89,7 +87,7 @@ const HistoryComponent = () => {
                         ))}
                     </Select>
                 </FormControl>
-                <FormControl style={{ marginRight: '10px', width: '140px' }}>
+                <FormControl style={{ margin: '10px', width: '140px' }}>
                     <InputLabel>Is Dangerous</InputLabel>
                     <Select
                         label='Is Dangerous'
@@ -108,7 +106,9 @@ const HistoryComponent = () => {
                     flights={tableData}
                     rowsPerPage={rowsPerPage}
                     tableHeaders={tableHeaders}
+                    tableDataHeades={tableDataHeaders}
                     handleButtonClick={handleButtonClick}
+                    styleBoolean={true}
                 />
             </div>
 

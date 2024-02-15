@@ -1,0 +1,17 @@
+.simuContainer {
+
+    display: grid;
+    grid-template-columns: 57% 43%;
+    gap: 20px;
+    padding: 0 10px;
+
+}
+
+.map {
+    width: 100%;
+}
+
+.tableContainer {
+
+    text-align: center;
+}

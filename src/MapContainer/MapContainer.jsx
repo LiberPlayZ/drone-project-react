@@ -6,7 +6,7 @@ import { MapContainer, TileLayer, FeatureGroup, Polygon, Popup, Marker, Tooltip,
 import { EditControl } from 'react-leaflet-draw';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import israelPolygon from './IsraelPolygonFile';
-import { DroneIcon, SelectedDroneIcon, EndPoint, StartPoint } from './DroneContainer/DroneIcon';
+import { SelectedDroneIcon, EndPoint, StartPoint, DroneIconClear, DroneIconDanger } from './DroneContainer/DroneIcon';
 
 
 const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward_delta, currentButtonClick, setbackward_forward_delta, setcurrentButtonClick, setButtonDisabled }) => { //component for the Israel map with polygon .
@@ -135,12 +135,12 @@ const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward
                 url={url}
                 attribution={attribution}
             />
-            <Marker
+            {showEndPoint && <Marker
                 key={'starting point'}
                 position={[dronesData[0].latitude, dronesData[0].longitude]}
                 icon={StartPoint}
-            ></Marker>
-            {showEndPoint &&(
+            ></Marker>}
+            {showEndPoint && (
                 <Marker
                     key={'ending point'}
                     position={[dronesData[dronesDataLength - 1].latitude, dronesData[dronesDataLength - 1].longitude]}
@@ -154,7 +154,7 @@ const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward
                 <Marker
                     key={`current-drone`}
                     position={[dronesData[currentDroneIndex].latitude, dronesData[currentDroneIndex].longitude]}
-                    icon={SelectedDroneIcon}
+                    icon={dronesData[currentDroneIndex].prediction > 0.5 ? DroneIconDanger : SelectedDroneIcon}
                     eventHandlers={{
                         click: (e) => handleMarkerCLick(e.target._map, dronesData[currentDroneIndex].latitude, dronesData[currentDroneIndex].longitude)
                     }}

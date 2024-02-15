@@ -6,6 +6,8 @@ import Flight_Socket from "./action_buttons/FlightData_Socket";
 import Button from '@mui/material/Button';
 import { IoReturnUpForward } from "react-icons/io5";
 import { styled } from "@mui/system";
+import './Play_flight.css';
+import Table_Component from "../history_component/Table_Component";
 
 
 const BackButtonStyle = styled('div')({
@@ -16,7 +18,7 @@ const BackButtonStyle = styled('div')({
 
 
 
-const Play_Flight = () => {
+const PlayFlight = () => {
     const navigate = useNavigate();
     const { flightId } = useParams(); // retrieve the choosen  flightId from history page. 
     const [flightData, setFlightData] = useState([]); // variable for flightData.
@@ -25,6 +27,11 @@ const Play_Flight = () => {
     const [currentDroneClick, setcurrentDroneClick] = useState(false); // state for current buttton click . 
     const [buttondisabled, setbuttondisabled] = useState(true); //state for disable the button when simulation didnt start. 
     const [message, setMessage] = useState('loading data ...');
+    const [currentPage, setCurrentPage] = useState(1); // variable for current page number
+
+
+    const tableHeaders = ['Position', 'Latitude', 'Longitude', 'Prediction', 'Show Pos']; //array of table headers to send to table component.
+    const tableDataHeaders = ['latitude', 'longitude', 'prediction']; //array of table data headers to send to table component.
 
     const handleBackButtonClick = () => { // handle back button click to move back to history page . 
         navigate(-1);
@@ -44,6 +51,9 @@ const Play_Flight = () => {
         setbackWard_forward_delta(-1);
     }
 
+    const handlePageChange = (newPage) => { // function to handle page number change .
+        setCurrentPage(newPage);
+    };
 
 
     useEffect(() => {
@@ -91,28 +101,47 @@ const Play_Flight = () => {
                     </Button>
                 </BackButtonStyle>
             </div>
+            <div className="simuContainer">
 
-            <MapContainerComponent
-                dronesData={flightData}
-                simulationStarted={simulationStarted}
-                backward_forward_delta={backward_forward_delta}
-                setbackward_forward_delta={setbackWard_forward_delta}
-                currentButtonClick={currentDroneClick}
-                setcurrentButtonClick={setcurrentDroneClick}
-                setButtonDisabled={setbuttondisabled}>
+                <div className="map">
+                    <MapContainerComponent
+                        dronesData={flightData}
+                        simulationStarted={simulationStarted}
+                        backward_forward_delta={backward_forward_delta}
+                        setbackward_forward_delta={setbackWard_forward_delta}
+                        currentButtonClick={currentDroneClick}
+                        setcurrentButtonClick={setcurrentDroneClick}
+                        setButtonDisabled={setbuttondisabled}>
 
-            </MapContainerComponent>
+                    </MapContainerComponent>
+                    <ActionButtonsHanlder
+                        handlePlay_Pause={play_simulation}
+                        changeIconByPress={simulationStarted}
+                        handleBackForward={back_forward_simulation}
+                        handleForward={forward_simulation}>
 
-            <ActionButtonsHanlder
-                handlePlay_Pause={play_simulation}
-                changeIconByPress={simulationStarted}
-                handleBackForward={back_forward_simulation}
-                handleForward={forward_simulation}>
+                    </ActionButtonsHanlder>
+                </div>
+                <div className="tableContainer">
+                    <Table_Component
+                        currentPage={currentPage}
+                        handlePageChange={handlePageChange}
+                        flights={flightData}
+                        rowsPerPage={5}
+                        tableHeaders={tableHeaders}
+                        tableDataHeades={tableDataHeaders}
+                        styleBoolean={false}
 
-            </ActionButtonsHanlder>
+                    />
+
+
+                </div>
+            </div>
+
+
 
         </div>
     );
 };
 
-export default Play_Flight; 
+export default PlayFlight; 

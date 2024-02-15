@@ -2,14 +2,14 @@
     
 } */
 
-.leaflet-container{
+.leaflet-container {
     width: 100%;
     height: 500px;
 }
 
 
-.toolTip_current{
-  
-    color: blue;
+.toolTip_current {
+
+    color: black;
     font-size: 14px;
 }

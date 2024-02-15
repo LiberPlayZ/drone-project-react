@@ -2,7 +2,9 @@ import L from 'leaflet';
 import droneIconImage from './icons/drone.png'
 import selectedDroneIconImage from './icons/droneSelected.png';
 import endpoint from './icons/endPoint.png';
-import startpoint from './icons/startpoint.png'
+import startpoint from './icons/startpoint.png';
+import drone_danger from './icons/drone_danger.png';
+import drone_clear from './icons/drone_clear.png';
 
 const DroneIcon = L.icon({
     iconUrl: droneIconImage,
@@ -16,6 +18,16 @@ const SelectedDroneIcon = L.icon({
     iconSize: [32, 32],
     iconAnchor: [16, 16],
 });
+const DroneIconDanger = L.icon({
+    iconUrl: drone_danger,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+});
+const DroneIconClear = L.icon({
+    iconUrl: drone_clear,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+});
 
 const StartPoint = L.icon({
     iconUrl: startpoint,
@@ -25,8 +37,8 @@ const StartPoint = L.icon({
 
 const EndPoint = L.icon({
     iconUrl: endpoint,
-    iconSize: [48, 48],
+    iconSize: [40, 40],
     iconAnchor: [24, 24],
 });
 
-export { DroneIcon, SelectedDroneIcon,StartPoint,EndPoint };
+export { DroneIcon, SelectedDroneIcon,StartPoint,EndPoint,DroneIconClear,DroneIconDanger };

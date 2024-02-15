@@ -3,7 +3,7 @@ import './LoginPage.css';
 import { FaLock } from 'react-icons/fa'
 import enviorment_variables from "../enviorment_variables";
 import CryptoJS from 'crypto-js';
-import { useNavigate } from 'react-router-dom'
+import Navbar from "../navbar/Navbar";
 import { checkIdNumber, checkPassword, handleIdNumber, handlePassword, handleName, handleAge, checkAge, handleRole, checkRole } from "./Logic";
 
 const RegisterPage = () => {
@@ -17,7 +17,7 @@ const RegisterPage = () => {
     const [checkConnectedRole, setCheckConnectedRole] = useState('')
     const [error, setError] = useState('');
 
-    const navigate = useNavigate();
+ 
 
     useEffect(() => {
         // Make a POST request to your backend to fetch the user's role
@@ -37,7 +37,7 @@ const RegisterPage = () => {
                 return response.json();
             })
             .then(data => {
-                console.log(data)
+                // console.log(data)
                 setCheckConnectedRole(data.Role)
             })
             .catch(error => {
@@ -88,12 +88,13 @@ const RegisterPage = () => {
 
     return (
         <div>
-
-            <div className="pageContainer">
-                <div className="container">
+        <Navbar></Navbar>
+            <div className="pageContainer" >
+           
+                <div className="container" >
                     <form action="" onSubmit={handleSubmit}>
                         <h1>Add User</h1>
-                        <div className="input-box">
+                        <div className="input-box" style={{height:'30px'}}>
                             <input
                                 type="text"
                                 id="name"
@@ -104,7 +105,7 @@ const RegisterPage = () => {
 
                             <label className="errorLabel"></label>
                         </div>
-                        <div className="input-box">
+                        <div className="input-box" style={{height:'30px'}}>
                             <input
                                 type='number'
                                 id="age"
@@ -114,7 +115,7 @@ const RegisterPage = () => {
                                 required />
                             <label className="errorLabel"></label>
                         </div>
-                        <div className="input-box">
+                        <div className="input-box" style={{height:'30px'}}>
                             <input
                                 type="text"
                                 id="IdNumber"
@@ -125,7 +126,7 @@ const RegisterPage = () => {
 
                             <label className="errorLabel"></label>
                         </div>
-                        <div className="input-box">
+                        <div className="input-box" style={{height:'30px'}}>
                             <input
                                 type="text"
                                 id="IdfNumber"
@@ -135,7 +136,7 @@ const RegisterPage = () => {
                                 required />
                             <label className="errorLabel"></label>
                         </div>
-                        <div className="input-box">
+                        <div className="input-box" style={{height:'30px'}}>
                             <input
                                 type="text"
                                 id="Role"
@@ -146,7 +147,7 @@ const RegisterPage = () => {
                             <label className="errorLabel"></label>
                         </div>
 
-                        <div className="input-box">
+                        <div className="input-box" style={{height:'30px'}}>
                             <input
                                 type='password'
                                 id="password"

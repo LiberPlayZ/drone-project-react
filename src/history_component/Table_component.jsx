@@ -1,5 +1,5 @@
 import React from "react";
-import './HistoryComponent.css';
+import './Table_Component.css';
 import Button from '@mui/material/Button';
 
 const Table_Component = ({
@@ -8,16 +8,27 @@ const Table_Component = ({
     flights, // the flight data . 
     rowsPerPage, // variable for number of rows for page .
     tableHeaders, // array of the headers of the table .
-    handleButtonClick // call back function to handle each table row button . 
+    tableDataHeades, // array for table data Headers.
+    handleButtonClick, // call back function to handle each table row button . 
+    styleBoolean , //bool for styling fontsize by components . true for history and false for simu
+
 }) => {
     //variables to handle next / previos page .
     const startIndex = (currentPage - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
     const currentFlights = flights.slice(startIndex, endIndex);
+    const activeStyles = {
+        fontSize: styleBoolean ? '15px' : '10px',
+    
+      };
+      const isDangerousSyle = {
+        fontSize: !styleBoolean ? '15px' : '10px',
+    
+      };
 
     return (
         <div>
-            <table>
+            <table style={activeStyles}>
                 <thead>
                     <tr>
                         {tableHeaders.map((header) => (
@@ -26,12 +37,12 @@ const Table_Component = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {currentFlights.map((flight) => (
+                    {currentFlights.map((flight, index) => (
                         <tr key={flight.flightId}>
-                            {/* Adjust this part based on your data structure */}
-                            <td>{flight.flightId}</td>
-                            <td>{flight.droneType}</td>
-                            <td>{flight.isDangerous ? 'Yes' : 'No'}</td>
+                            <td>{index + 1}</td>
+                            <td>{flight[tableDataHeades[0]]}</td>
+                            <td>{flight[tableDataHeades[1]] }</td>
+                            <td>{flight[tableDataHeades[2]]}</td>
                             <td>
                                 <Button
                                     variant="contained"

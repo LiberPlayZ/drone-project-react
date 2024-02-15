@@ -1,17 +1,21 @@
 import React from "react";
 import './Navbar.css'
+import { useNavigate } from 'react-router-dom'
 
 
-const Navbar = ({isAdmin}) => {
+const Navbar = ({isAdmin}) => { //component for navbar , get as prop bolean isAdmin to show button if true . 
 
+  
     return (
-
+        <div className="clearfix">
         <div className="topnav">
-            <div >Home</div>
-            <div >About</div>
-            <div>Contact</div>
+            <a href="/flightsHistory" >Flights History</a>
+            <a >About</a>
+            <a>Contact</a>
             {isAdmin &&
-                <div className="split">AddUser</div>}
+                <a className="split" href="/addUser">AddUser</a>}
+        </div>
+        <div style={{height:'80px'}}></div>
         </div>
     );
 
