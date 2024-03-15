@@ -10,7 +10,8 @@ const Table_Component = ({
     tableHeaders, // array of the headers of the table .
     tableDataHeades, // array for table data Headers.
     handleButtonClick, // call back function to handle each table row button . 
-    styleBoolean , //bool for styling fontsize by components . true for history and false for simu
+    styleBoolean, //bool for styling fontsize by components . true for history and false for simulation.
+    selected
 
 }) => {
     //variables to handle next / previos page .
@@ -19,12 +20,12 @@ const Table_Component = ({
     const currentFlights = flights.slice(startIndex, endIndex);
     const activeStyles = {
         fontSize: styleBoolean ? '15px' : '10px',
-    
-      };
-      const isDangerousSyle = {
+
+    };
+    const isDangerousSyle = {
         fontSize: !styleBoolean ? '15px' : '10px',
-    
-      };
+
+    };
 
     return (
         <div>
@@ -38,10 +39,10 @@ const Table_Component = ({
                 </thead>
                 <tbody>
                     {currentFlights.map((flight, index) => (
-                        <tr key={flight.flightId}>
-                            <td>{index + 1}</td>
+                        <tr key={((currentPage - 1) * rowsPerPage) + index + 1} className={selected === index ? 'selected_row' : ''}>
+                            <td>{((currentPage - 1) * rowsPerPage) + index + 1}</td>
                             <td>{flight[tableDataHeades[0]]}</td>
-                            <td>{flight[tableDataHeades[1]] }</td>
+                            <td>{flight[tableDataHeades[1]]}</td>
                             <td>{flight[tableDataHeades[2]]}</td>
                             <td>
                                 <Button

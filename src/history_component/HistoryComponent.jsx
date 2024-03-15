@@ -87,6 +87,7 @@ const HistoryComponent = () => {
                         ))}
                     </Select>
                 </FormControl>
+                
                 <FormControl style={{ margin: '10px', width: '140px' }}>
                     <InputLabel>Is Dangerous</InputLabel>
                     <Select

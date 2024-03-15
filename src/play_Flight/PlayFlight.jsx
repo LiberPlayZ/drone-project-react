@@ -28,6 +28,7 @@ const PlayFlight = () => {
     const [buttondisabled, setbuttondisabled] = useState(true); //state for disable the button when simulation didnt start. 
     const [message, setMessage] = useState('loading data ...');
     const [currentPage, setCurrentPage] = useState(1); // variable for current page number
+    const [rowNumber,setRowNumber] = useState(0);
 
 
     const tableHeaders = ['Position', 'Latitude', 'Longitude', 'Prediction', 'Show Pos']; //array of table headers to send to table component.
@@ -39,6 +40,9 @@ const PlayFlight = () => {
 
     const handleCurrentDronenClick = () => { // handle Current drone click to triger child component .  
         setcurrentDroneClick(true);
+    }
+    const handleRowChange = (rowNumber) => { // handle for row mark change by simulation.
+        setRowNumber(rowNumber)
     }
 
     const play_simulation = () => { //handle play pause click.
@@ -111,7 +115,8 @@ const PlayFlight = () => {
                         setbackward_forward_delta={setbackWard_forward_delta}
                         currentButtonClick={currentDroneClick}
                         setcurrentButtonClick={setcurrentDroneClick}
-                        setButtonDisabled={setbuttondisabled}>
+                        setButtonDisabled={setbuttondisabled}
+                        setRowNumber={handleRowChange}>
 
                     </MapContainerComponent>
                     <ActionButtonsHanlder
@@ -131,6 +136,7 @@ const PlayFlight = () => {
                         tableHeaders={tableHeaders}
                         tableDataHeades={tableDataHeaders}
                         styleBoolean={false}
+                        selected={rowNumber}
 
                     />
 

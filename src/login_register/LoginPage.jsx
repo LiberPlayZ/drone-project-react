@@ -41,9 +41,8 @@ const LoginPage = () => {
                     setError('Login valid ');
                 }
                 if (response.ok) {
-                    const session_token = checkCookieExist();
-                    // Store session token in local storage or cookie
-                    localStorage.setItem('session_token', session_token);
+                  
+                  
 
                     navigate('/flightsHistory');
                 }

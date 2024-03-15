@@ -29,6 +29,10 @@ table th {
     margin-top: 20px;
 }
 
+.selected_row{
+    background-color: #f0f0f0;
+}
+
 .tableContainer table tbody tr:hover {
     background-color: #f0f0f0;
 

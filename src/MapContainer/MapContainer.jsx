@@ -9,7 +9,7 @@ import israelPolygon from './IsraelPolygonFile';
 import { SelectedDroneIcon, EndPoint, StartPoint, DroneIconClear, DroneIconDanger } from './DroneContainer/DroneIcon';
 
 
-const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward_delta, currentButtonClick, setbackward_forward_delta, setcurrentButtonClick, setButtonDisabled }) => { //component for the Israel map with polygon .
+const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward_delta, currentButtonClick, setbackward_forward_delta, setcurrentButtonClick, setButtonDisabled, setRowNumber }) => { //component for the Israel map with polygon .
     const [currentZoom, setCurrentZoom] = useState(enviorment_variables.Map_zoom); // hook for zoom level in the map . 
     const [currentDroneIndex, setCurrentDroneIndex] = useState(0);
     const center = enviorment_variables.Israel_cordinates;
@@ -73,9 +73,16 @@ const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward
         if (dronesData.length === 0) {
             return; // No data, nothing to simulate
         }
+        if (!simulationStarted) {
+            setButtonDisabled(true);
+        }
+        else {
+            setRowNumber(currentDroneIndex)
+        }
 
         const interval = setInterval(() => {
-            setCurrentDroneIndex((prevIndex) => (prevIndex + 1) % dronesData.length);
+            if (simulationStarted)
+                setCurrentDroneIndex((prevIndex) => (prevIndex + 1) % dronesData.length);
         }, 3000);
 
         if (backward_forward_delta === -1) {
@@ -99,16 +106,15 @@ const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward
 
 
         }
-        if (!simulationStarted) {
-            setButtonDisabled(true);
-        }
+
+
 
         return () => {
             clearInterval(interval)
             // map.off('move', handleMapMove);
         };
 
-    }, [dronesData, simulationStarted, backward_forward_delta, setbackward_forward_delta, currentButtonClick, setcurrentButtonClick]);
+    }, [dronesData, simulationStarted, backward_forward_delta, setbackward_forward_delta, currentButtonClick, currentDroneIndex, setcurrentButtonClick]);
 
 
     return (

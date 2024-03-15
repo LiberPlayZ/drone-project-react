@@ -2,25 +2,27 @@
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import enviorment_variables from '../enviorment_variables';
-import { checkCookieExist } from '../login_register/checkCookie';
+
 
 const SOCKET_URL = enviorment_variables.Server_URL;
 
 const SendAndReceive_Socket = (sendData, setReceiveData,setIsAdmin,sendUrlOnChange, receiveUrlOnChange,loaded,setloaded,setDroneTypes,setMessage) => {
-  const socket = io.connect(SOCKET_URL);
-  const existCookie = checkCookieExist();
+  const socket = io(SOCKET_URL,{
+    withCredentials:true
+  });
+
   useEffect(() => {
    
 
     if(loaded){
-      socket.emit('get_initial_data',existCookie);
+      socket.emit('get_initial_data');
 
 
 
       socket.once('initial_data_response', (data) => {
         if(data.error){
           setMessage('Authentication failed , please log in.');
-          localStorage.removeItem('session_token');
+        
         }
         else
           handleResponse(data, setDroneTypes, setReceiveData,setIsAdmin)
