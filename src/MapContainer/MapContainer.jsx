@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './MapContainer.css';
 import "leaflet/dist/leaflet.css";
+import IconLegendControl from './IconLegendControl';
 import enviorment_variables from '../enviorment_variables';
-import { MapContainer, TileLayer, FeatureGroup, Polygon, Popup, Marker, Tooltip, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, FeatureGroup, Polygon, Popup, Marker, Tooltip, Polyline, } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import israelPolygon from './IsraelPolygonFile';
 import { SelectedDroneIcon, EndPoint, StartPoint, DroneIconClear, DroneIconDanger } from './DroneContainer/DroneIcon';
 
 
-const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward_delta, currentButtonClick, setbackward_forward_delta, setcurrentButtonClick, setButtonDisabled, setRowNumber }) => { //component for the Israel map with polygon .
+const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward_delta, setbackward_forward_delta, setRowNumber }) => { //component for the Israel map with polygon .
     const [currentZoom, setCurrentZoom] = useState(enviorment_variables.Map_zoom); // hook for zoom level in the map . 
     const [currentDroneIndex, setCurrentDroneIndex] = useState(0);
     const center = enviorment_variables.Israel_cordinates;
@@ -17,7 +18,7 @@ const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward
     const attribution = enviorment_variables.TitleLayer_atribution;
     const [mapObject, setmapObject] = useState(null);
     const dronesDataLength = dronesData.length;
-    const [showEndPoint, setShowEndPoint] = useState(false);
+    const [showEndPoint, setShowEndPoint] = useState(false); //state for showing end flag.
 
 
 
@@ -48,7 +49,6 @@ const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward
     }
 
     const handleMarkerCLick = (map, lat, long) => { //function to handle current Drone position and zoom on it . 
-        setButtonDisabled(false);
         setShowEndPoint(true);
         setmapObject(map);
         if (map) {
@@ -61,6 +61,7 @@ const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward
         const p = e.layer._latlngs[0].map((latLng) => [latLng.lat, latLng.lng]);
         console.log(p);
     }
+ 
 
 
 
@@ -73,10 +74,7 @@ const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward
         if (dronesData.length === 0) {
             return; // No data, nothing to simulate
         }
-        if (!simulationStarted) {
-            setButtonDisabled(true);
-        }
-        else {
+        if (simulationStarted) {
             setRowNumber(currentDroneIndex)
         }
 
@@ -100,12 +98,8 @@ const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward
 
         }
 
-        if (currentButtonClick) {
-            handleMarkerCLick(mapObject, dronesData[currentDroneIndex].latitude, dronesData[currentDroneIndex].longitude);
-            setcurrentButtonClick(false);
-
-
-        }
+       
+      
 
 
 
@@ -114,7 +108,7 @@ const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward
             // map.off('move', handleMapMove);
         };
 
-    }, [dronesData, simulationStarted, backward_forward_delta, setbackward_forward_delta, currentButtonClick, currentDroneIndex, setcurrentButtonClick]);
+    }, [dronesData, simulationStarted, backward_forward_delta, setbackward_forward_delta, currentDroneIndex]);
 
 
     return (
@@ -176,7 +170,7 @@ const MapContainerComponent = ({ dronesData, simulationStarted, backward_forward
                 </Marker>
             )}
 
-
+            <IconLegendControl position={'bottomright'} lat={dronesData[currentDroneIndex].latitude}long={dronesData[currentDroneIndex].longitude} zoomlevel={18} ></IconLegendControl>
                 //polygon of Israel .
 
             <Polygon positions={israelPolygon.geometry.coordinates} pathOptions={{ stroke: true, fill: false }}>

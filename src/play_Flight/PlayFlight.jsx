@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import MapContainerComponent from "../MapContainer/MapContainer";
 import { useParams, useNavigate } from "react-router-dom";
 import ActionButtonsHanlder from './action_buttons/Action_Buttons_Handler';
-import Flight_Socket from "./action_buttons/FlightData_Socket";
+import Flight_Socket from "../backend_handlers/FlightData_Socket";
 import Button from '@mui/material/Button';
 import { IoReturnUpForward } from "react-icons/io5";
 import { styled } from "@mui/system";
 import './Play_flight.css';
 import Table_Component from "../history_component/Table_Component";
+import Navbar from "../navbar/Navbar";
 
 
 const BackButtonStyle = styled('div')({
@@ -24,11 +25,9 @@ const PlayFlight = () => {
     const [flightData, setFlightData] = useState([]); // variable for flightData.
     const [simulationStarted, setsimulationStarted] = useState(false); // variable to see if simulation started .
     const [backward_forward_delta, setbackWard_forward_delta] = useState(0); // variable for controller , -1 - backward , 1 - forward
-    const [currentDroneClick, setcurrentDroneClick] = useState(false); // state for current buttton click . 
-    const [buttondisabled, setbuttondisabled] = useState(true); //state for disable the button when simulation didnt start. 
     const [message, setMessage] = useState('loading data ...');
     const [currentPage, setCurrentPage] = useState(1); // variable for current page number
-    const [rowNumber,setRowNumber] = useState(0);
+    const [rowNumber, setRowNumber] = useState(0);
 
 
     const tableHeaders = ['Position', 'Latitude', 'Longitude', 'Prediction', 'Show Pos']; //array of table headers to send to table component.
@@ -38,9 +37,6 @@ const PlayFlight = () => {
         navigate(-1);
     }
 
-    const handleCurrentDronenClick = () => { // handle Current drone click to triger child component .  
-        setcurrentDroneClick(true);
-    }
     const handleRowChange = (rowNumber) => { // handle for row mark change by simulation.
         setRowNumber(rowNumber)
     }
@@ -63,9 +59,7 @@ const PlayFlight = () => {
     useEffect(() => {
 
 
-        if (currentDroneClick) {
-            setbuttondisabled(false);
-        }
+
         const socket = Flight_Socket(flightId, setMessage, (data) => {
             setFlightData(data);
         });
@@ -77,7 +71,7 @@ const PlayFlight = () => {
             socket.disconnect();
         };
 
-    }, [flightId, setFlightData, currentDroneClick]);
+    }, [flightId, setFlightData]);
 
 
     if (flightData.length === 0) {
@@ -89,21 +83,20 @@ const PlayFlight = () => {
 
     return (
         <div>
-            {/* <h1>Map of Israel</h1> */}
-            {/* <h1>flightId:{flightId}</h1> */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <BackButtonStyle>
+            <Navbar></Navbar>
+            <div style={{ display: 'flex', position: 'relative', zIndex: '1', paddingTop: '15px' }}>
+                {/* <BackButtonStyle>
                     <Button variant="contained" disabled={buttondisabled} onClick={handleCurrentDronenClick}>
                         Current Drone
                     </Button>
-                </BackButtonStyle>
+                </BackButtonStyle> */}
 
 
-                <BackButtonStyle>
+                {/* <BackButtonStyle>
                     <Button variant="contained" endIcon={<IoReturnUpForward />} onClick={handleBackButtonClick}>
                         Back
                     </Button>
-                </BackButtonStyle>
+                </BackButtonStyle> */}
             </div>
             <div className="simuContainer">
 
@@ -113,9 +106,6 @@ const PlayFlight = () => {
                         simulationStarted={simulationStarted}
                         backward_forward_delta={backward_forward_delta}
                         setbackward_forward_delta={setbackWard_forward_delta}
-                        currentButtonClick={currentDroneClick}
-                        setcurrentButtonClick={setcurrentDroneClick}
-                        setButtonDisabled={setbuttondisabled}
                         setRowNumber={handleRowChange}>
 
                     </MapContainerComponent>

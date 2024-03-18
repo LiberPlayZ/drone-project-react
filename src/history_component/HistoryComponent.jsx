@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import './HistoryComponent.css';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+
 import Table_Component from './Table_Component';
-import SendAndReceive_Socket from "./SendAndReceive_Socket";
+import SendAndReceive_Socket from "../backend_handlers/SendAndReceive_Socket";
 import enviorment_variables from "../enviorment_variables";
 import { useNavigate } from 'react-router-dom'
 
@@ -63,7 +64,7 @@ const HistoryComponent = () => {
     }
 
     return (
-        <>
+        <div>
             <Navbar isAdmin={isAdmin}></Navbar>
             <div className="filter-buttons">
 
@@ -113,7 +114,7 @@ const HistoryComponent = () => {
                 />
             </div>
 
-        </>
+        </div>
     );
 };
 

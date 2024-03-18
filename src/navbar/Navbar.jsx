@@ -15,7 +15,7 @@ const Navbar = ({isAdmin}) => { //component for navbar , get as prop bolean isAd
             {isAdmin &&
                 <a className="split" href="/addUser">AddUser</a>}
         </div>
-        <div style={{height:'80px'}}></div>
+      
         </div>
     );
 

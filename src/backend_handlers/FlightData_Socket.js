@@ -1,17 +1,17 @@
 import { io } from 'socket.io-client'
-import enviorment_variables from '../../enviorment_variables'
+import enviorment_variables from '../enviorment_variables';
 
 
 const Server_URL = enviorment_variables.Server_URL;
 
 
-
+//socket io handler for flight data and predictions  in simulation page .
 
 const Flight_Socket = (flightId, setMessage, setReceiveData) => {
-    const socket = io(Server_URL,{
-        withCredentials:true
+    const socket = io(Server_URL, {
+        withCredentials: true
     });
-  
+
     socket.emit(enviorment_variables.Send_Filght_Url, flightId);
 
 
@@ -19,7 +19,7 @@ const Flight_Socket = (flightId, setMessage, setReceiveData) => {
     socket.once(enviorment_variables.Recieve_Filght_data_Url, (data) => {
         if (data.error) {
             setMessage('Authentication failed , please log in.');
-           
+
         }
         else {
             setReceiveData(data);

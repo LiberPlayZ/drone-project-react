@@ -8,8 +8,8 @@ import drone_clear from './icons/drone_clear.png';
 
 const DroneIcon = L.icon({
     iconUrl: droneIconImage,
-    iconSize: [24, 24],
-    iconAnchor: [12, 12],
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
 });
 
 

@@ -4,6 +4,7 @@ import { FaLock } from 'react-icons/fa'
 import enviorment_variables from "../enviorment_variables";
 import CryptoJS from 'crypto-js';
 import Navbar from "../navbar/Navbar";
+import { PostRequestHandler } from "../backend_handlers/PostRequestHandler";
 import { checkIdNumber, checkPassword, handleIdNumber, handlePassword, handleName, handleAge, checkAge, handleRole, checkRole } from "./Logic";
 
 const RegisterPage = () => {
@@ -17,11 +18,11 @@ const RegisterPage = () => {
     const [checkConnectedRole, setCheckConnectedRole] = useState('')
     const [error, setError] = useState('');
 
- 
+
 
     useEffect(() => {
         // Make a POST request to your backend to fetch the user's role
-        fetch(Server_url + '/currentRole', {
+        fetch(Server_url + '/checkCurrentRole', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -56,45 +57,32 @@ const RegisterPage = () => {
             return;
         }
         if (checkIdNumber(IdNumber) && checkPassword(Password) && checkAge(age) && checkRole(Role)) {
-            try {
-                const hashPass = CryptoJS.SHA256(Password).toString();
-                const response = await fetch(Server_url + '/addUser', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ Name, age, IdNumber, IdfNumber, Role, password: hashPass }),
-                    credentials: 'include'
-                });
-
-                const data = await response.json();
-                console.log(data);
-              
-
-            } catch (error) {
-
-                console.error('Error:', error);
-
-                // Handle error
+            const hashPass = CryptoJS.SHA256(Password).toString();
+            const response = await PostRequestHandler('/addUser', { Name, age, IdNumber, IdfNumber, Role, password: hashPass }, setError);
+            const data = response.json();
+            if (response.ok) {
+                alert("user added successfully");
             }
+
+
 
         }
     }
 
-    if (checkConnectedRole!=='admin') {
+    if (checkConnectedRole !== 'admin') {
         return <a href="/LoginPage" style={{ display: 'flex', fontSize: '40px', alignItems: 'center', justifyContent: 'center' }}
         >Your role can not add user ,pls log in</a>;
     }
 
     return (
         <div>
-        <Navbar></Navbar>
+            <Navbar></Navbar>
             <div className="pageContainer" >
-           
+
                 <div className="container" >
                     <form action="" onSubmit={handleSubmit}>
                         <h1>Add User</h1>
-                        <div className="input-box" style={{height:'30px'}}>
+                        <div className="input-box" style={{ height: '30px' }}>
                             <input
                                 type="text"
                                 id="name"
@@ -105,7 +93,7 @@ const RegisterPage = () => {
 
                             <label className="errorLabel"></label>
                         </div>
-                        <div className="input-box" style={{height:'30px'}}>
+                        <div className="input-box" style={{ height: '30px' }}>
                             <input
                                 type='number'
                                 id="age"
@@ -115,7 +103,7 @@ const RegisterPage = () => {
                                 required />
                             <label className="errorLabel"></label>
                         </div>
-                        <div className="input-box" style={{height:'30px'}}>
+                        <div className="input-box" style={{ height: '30px' }}>
                             <input
                                 type="text"
                                 id="IdNumber"
@@ -126,7 +114,7 @@ const RegisterPage = () => {
 
                             <label className="errorLabel"></label>
                         </div>
-                        <div className="input-box" style={{height:'30px'}}>
+                        <div className="input-box" style={{ height: '30px' }}>
                             <input
                                 type="text"
                                 id="IdfNumber"
@@ -136,7 +124,7 @@ const RegisterPage = () => {
                                 required />
                             <label className="errorLabel"></label>
                         </div>
-                        <div className="input-box" style={{height:'30px'}}>
+                        <div className="input-box" style={{ height: '30px' }}>
                             <input
                                 type="text"
                                 id="Role"
@@ -147,7 +135,7 @@ const RegisterPage = () => {
                             <label className="errorLabel"></label>
                         </div>
 
-                        <div className="input-box" style={{height:'30px'}}>
+                        <div className="input-box" style={{ height: '30px' }}>
                             <input
                                 type='password'
                                 id="password"

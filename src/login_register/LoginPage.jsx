@@ -4,7 +4,7 @@ import { FaUser, FaLock } from 'react-icons/fa'
 import enviorment_variables from "../enviorment_variables";
 import CryptoJS from 'crypto-js';
 import { useNavigate } from 'react-router-dom'
-import { checkCookieExist } from "./checkCookie";
+import { PostRequestHandler } from "../backend_handlers/PostRequestHandler";
 import { checkIdNumber, checkPassword, handleIdNumber, handlePassword } from "./Logic";
 
 const LoginPage = () => {
@@ -25,34 +25,17 @@ const LoginPage = () => {
             return;
         }
         if (checkIdNumber(IdNumber) && checkPassword(Password)) {
-            try {
-                const hashPass = CryptoJS.SHA256(Password).toString();
-                const response = await fetch(Server_url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ IdNumber, password: hashPass }),
-                    credentials: 'include'
-                });
-
-                const data = await response.json();
-                if (data['error'] === 'Login valid ') {
-                    setError('Login valid ');
-                }
-                if (response.ok) {
-                  
-                  
-
-                    navigate('/flightsHistory');
-                }
-
-            } catch (error) {
-
-                console.error('Error:', error);
-
-                // Handle error
+            const hashPass = CryptoJS.SHA256(Password).toString();
+            const response = await PostRequestHandler('/login', { IdNumber, password: hashPass }, setError);
+            const data =  response.json();
+            if (data['error'] === 'Login valid') {
+                setError('Login valid ');
             }
+            if (response.ok) {
+                navigate('/flightsHistory');
+            }
+
+
 
         }
     }

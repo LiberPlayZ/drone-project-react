@@ -12,4 +12,36 @@
 
     color: black;
     font-size: 14px;
+  
 }
+
+.legend-item {
+    margin-bottom: 10px; 
+    display: flex;
+    align-items: center;
+  }
+  
+  .legend-item img {
+    width: 32px; 
+    height: 32px;
+    margin-right: 10px; 
+  }
+  
+  .legend-item span {
+    font-size: 14px; 
+    vertical-align: middle; /* Align the text vertically with the icon */
+    background-color: white;
+  }
+
+.leaflet-control-button img {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: 5px; /* Rounded corners */
+}
+
+/* .leaflet-control-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+
+
+  

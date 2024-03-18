@@ -6,6 +6,8 @@ import enviorment_variables from '../enviorment_variables';
 
 const SOCKET_URL = enviorment_variables.Server_URL;
 
+//socket io handler for flight history page . 
+
 const SendAndReceive_Socket = (sendData, setReceiveData,setIsAdmin,sendUrlOnChange, receiveUrlOnChange,loaded,setloaded,setDroneTypes,setMessage) => {
   const socket = io(SOCKET_URL,{
     withCredentials:true

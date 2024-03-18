@@ -5,12 +5,12 @@ import PlayFlight from './play_Flight/PlayFlight';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import LoginPage from'./login_register/LoginPage';
 
-import { checkCookieExist } from './login_register/checkCookie';
+import { PostRequestHandler } from './backend_handlers/PostRequestHandler';
 import RegisterPage from './login_register/RegisterPage';
 
 
 
-const isAuthenticated = checkCookieExist();
+const isAuthenticatedResponse =  await PostRequestHandler('/checkLogin');
 
 
 const NavigateToLogin = ({ routeName }) => { // component to render login at first page .
@@ -18,11 +18,11 @@ const NavigateToLogin = ({ routeName }) => { // component to render login at fir
 
 
   useEffect(() => {
-    if (isAuthenticated != null) {
+    if (isAuthenticatedResponse.ok) {
+      console.log('ok');
       navigate(routeName);
     }
     else {
-      localStorage.removeItem('session_token');
       navigate('/LoginPage');
     }
   }, [navigate,routeName]);

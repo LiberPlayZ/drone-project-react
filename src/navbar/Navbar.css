@@ -1,13 +1,12 @@
 
 
-.clearfix::after {
-    content: "";
-    clear: both;
-    display: table;
+.clearfix{
+    height: 10vh;
 }
 
+
 .topnav {
-    overflow: hidden;
+  
     background-color: #333;
     position: fixed;
     /* Fixed positioning */
